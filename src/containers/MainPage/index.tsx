@@ -1,10 +1,11 @@
 import { inject, observer } from 'mobx-react';
 import React, { useEffect } from 'react';
 import { MainStore } from '../../stores/mainState';
-import { SurveyListStore } from '../../stores/surveyList';
 import Header from './Header';
 import Content from './Content';
-import AddPopup from './surveys/AddPopup';
+import AddPopup from './surveys/AddEditSurvey';
+import hocCreateWithNewItem from '../../components/hoc/newItem';
+import SurveyItem from '../../stores/surveys/surveyItem';
 
 const MainPage = (props: any) => {
   const {mainStore} : {mainStore: MainStore} = props;
@@ -12,7 +13,10 @@ const MainPage = (props: any) => {
   let popupAdd = null;
   
   if (mainStore.isShowAddSurveyPopup) {
-    popupAdd = <AddPopup />;
+    popupAdd = hocCreateWithNewItem<SurveyItem>(
+      AddPopup,
+      () => {item: new SurveyItem()}
+    );
   }
 
   return (

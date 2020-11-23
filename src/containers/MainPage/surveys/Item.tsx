@@ -1,7 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import { observable } from 'mobx';
-import { SurveyListStore } from '../../../stores/surveyList';
+import { SurveyListStore } from '../../../stores/surveys/surveyList';
 
 const SurveyItem = (props: any) => {
   return (

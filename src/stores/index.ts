@@ -1,5 +1,5 @@
 import mainStore, { MainStore } from './mainState';
-import surveyListStore, { SurveyListStore } from './surveyList';
+import surveyListStore, { SurveyListStore } from './surveys/surveyList';
 
 interface IStores {
   mainStore: MainStore,

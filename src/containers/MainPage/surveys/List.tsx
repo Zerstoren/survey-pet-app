@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import SurveyItem from './Item';
 import { observer, inject } from 'mobx-react';
-import { SurveyListStore } from '../../../stores/surveyList';
+import { SurveyListStore } from '../../../stores/surveys/surveyList';
 
 const SurveyList = (props: any) => {
   const {surveyListStore} : {surveyListStore: SurveyListStore} = props;
@@ -9,10 +9,6 @@ const SurveyList = (props: any) => {
   useEffect(() => {
     surveyListStore.loadList();
   }, []);
-
-  useEffect(() => {
-    console.log(surveyListStore.state);
-  }, [surveyListStore.state])
 
   let survList = [];
 
