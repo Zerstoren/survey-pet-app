@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import store from './features/store';
-import './index.css';
-import App from './view/App';
+import { Provider } from 'mobx-react';
+import stores from './state/store';
+import './css/index.scss';
+import App from './containers/App';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
+    <Provider {...stores}>
       <App />
     </Provider>
   </React.StrictMode>,
