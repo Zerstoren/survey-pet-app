@@ -1,20 +1,27 @@
-import { observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { useEffect } from 'react';
-import { SurveyListStore } from '../../state/surveyList';
-import Header from './header';
+import { MainStore } from '../../stores/mainState';
+import { SurveyListStore } from '../../stores/surveyList';
+import Header from './Header';
+import Content from './Content';
+import AddPopup from './surveys/AddPopup';
 
-const MainPage = inject('surveyListStore')(observer(({surveyListStore} : {surveyListStore: SurveyListStore}) => {
-  useEffect(() => {
-    surveyListStore.loadList();
-  }, []);
+const MainPage = (props: any) => {
+  const {mainStore} : {mainStore: MainStore} = props;
+
+  let popupAdd = null;
+  
+  if (mainStore.isShowAddSurveyPopup) {
+    popupAdd = <AddPopup />;
+  }
 
   return (
     <>
-      {surveyListStore.getState()}
+      {popupAdd}
       <Header />
+      <Content />
     </>
   );
-}));
+};
 
-export default MainPage;
+export default inject('mainStore')(observer(MainPage));

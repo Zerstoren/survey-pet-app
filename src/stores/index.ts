@@ -1,13 +1,13 @@
-import rootStore, { RootStore } from './rootState';
+import mainStore, { MainStore } from './mainState';
 import surveyListStore, { SurveyListStore } from './surveyList';
 
 interface IStores {
-  rootStore: RootStore,
+  mainStore: MainStore,
   surveyListStore: SurveyListStore
 }
 
 const Stores: IStores = {
-  rootStore,
+  mainStore,
   surveyListStore
 }
 

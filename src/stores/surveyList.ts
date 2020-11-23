@@ -1,6 +1,6 @@
-import { action, autorun, makeObservable, observable, runInAction, when } from 'mobx';
+import { action, autorun, makeObservable, observable, runInAction, when, computed, trace } from 'mobx';
 import { getItemsFromStorage } from '../storageEmulate/surveyList';
-import rootStore from './rootState';
+import rootStore from './mainState';
 
 enum NetworkState {
   IDLE,
@@ -19,13 +19,9 @@ class SurveyListStore {
       () => this.state === NetworkState.ERROR,
       () => this.resetNetworkState(),
     );
-
-    autorun(() => {
-      console.log('State change', this.state);
-    })
   }
 
-  getState() {
+  @computed get getState() : string {
     switch (this.state) {
       case NetworkState.IDLE:
         return 'idle';
@@ -50,17 +46,14 @@ class SurveyListStore {
 
       runInAction(() => {
         this.state = NetworkState.ERROR;
-        console.log('set error')
       });
     }
   }
 
   @action resetNetworkState = async () => {
-    setTimeout(() => {
-      runInAction(() => this.state = NetworkState.IDLE);
-    }, 2000);
+    setTimeout(() => runInAction(() => this.state = NetworkState.IDLE), 2000);
   }
 }
 
-export { SurveyListStore };
+export { SurveyListStore, NetworkState };
 export default new SurveyListStore();

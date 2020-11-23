@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'mobx-react';
-import stores from './state/store';
+import stores from './stores';
 import './css/index.scss';
 import App from './containers/App';
 
