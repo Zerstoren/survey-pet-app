@@ -1,4 +1,4 @@
-import { action, autorun, makeObservable, observable, runInAction, when, computed, trace } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 import { getItemsFromStorage } from '../../storageEmulate/surveyList';
 import rootStore from '../mainState';
 

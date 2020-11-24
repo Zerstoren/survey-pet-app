@@ -1,23 +1,34 @@
-import { action, makeObservable, observable } from "mobx";
-import SurveyOptions from "./surveyOptions";
+import { getSnapshot, Instance, types } from "mobx-state-tree";
+import { getUniqueKey } from "../../helpers/fns/math";
+import SurveyQuestion, { ISurveyQuestion, SELECT_TYPE } from "./surveyQuestion";
 
-
-export default class SurveyItem {
-  @observable public id: number | undefined;
-  @observable public title: string | undefined;
-  @observable public expiredTime: string | undefined;
-  @observable public options: SurveyOptions | undefined;
-
-  constructor(data: any = {}) {
-    makeObservable(this);
-    // this.options = new SurveyOptions(data?.options);
+const SurveyItem = types.model({
+  id: types.identifier,
+  title: types.optional(types.string, ''),
+  questions: types.array(SurveyQuestion)
+}).actions(self => ({
+  setTitle(title: string) {
+    self.title = title;
+  },
+  createOption() {
+    self.questions.push(SurveyQuestion.create({
+      id: getUniqueKey('question_id_'),
+      questionTitle: '',
+      questionType: SELECT_TYPE.SINGLE
+    }));
+  },
+  removeOption(question: ISurveyQuestion) {
+    self.questions.remove(question);
+  },
+  save() {
+    console.log(getSnapshot(self));
   }
+}));
 
-  @action setTitle(title: string) {
-    this.title = title;
-  }
+type ISurveyItem = Instance<typeof SurveyItem>
 
-  @action load() {
-    
-  }
-}
+export type {
+  ISurveyItem
+};
+
+export default SurveyItem;

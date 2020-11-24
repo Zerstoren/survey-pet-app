@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default () => {
+const BreadCrumbs = () => {
   return (
     <nav className="breadcrumbs d-flex justify-content-start align-items-center">
       <ol className="breadcrumb">
@@ -10,3 +10,5 @@ export default () => {
     </nav>
   )
 }
+
+export default BreadCrumbs;

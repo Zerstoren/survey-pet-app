@@ -1,10 +1,20 @@
-import { makeObservable, observable } from "mobx";
+import { Instance, types } from "mobx-state-tree";
+import { getUniqueKey } from "../../helpers/fns/math";
 
-export default class SurveyOption {
-  @observable public text: string | undefined;
-  @observable public position: number = 0;
-
-  constructor() {
-    makeObservable(this);
+const SurveyOption = types.model({
+  id: types.identifier,
+  text: types.string,
+  position: types.number
+}).actions(self => ({
+  setText(text: string) {
+    self.text = text;
   }
-}
+}));
+
+type ISurveyOption = Instance<typeof SurveyOption>;
+
+export type {
+  ISurveyOption
+};
+
+export default SurveyOption;

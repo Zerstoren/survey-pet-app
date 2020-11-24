@@ -1,9 +1,10 @@
 import { inject, observer } from 'mobx-react';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import UiPopup from '../../../../components/uiBase/popup';
 import { MainStore } from '../../../../stores/mainState';
-import SurveyItem from '../../../../stores/surveys/surveyItem';
-import Options from './options';
+import SurveyItem, { ISurveyItem } from '../../../../stores/surveys/surveyItem';
+import SurveyQuestion, { ISurveyQuestion } from '../../../../stores/surveys/surveyQuestion';
+import Options from './Question';
 
 const AddPopup = (props: any) => {
   const {
@@ -11,20 +12,25 @@ const AddPopup = (props: any) => {
     item,
   }: {
     mainStore: MainStore,
-    item: SurveyItem
+    item: ISurveyItem
   } = props;
 
-  const [title, setTitle] = useState('');
-
-  useEffect(() => {
-    setTitle((item.title || '') as string);
-  }, [item.title]);
-
-
+  const [title, setTitle] = useState(item.title || '');
+  
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
-    item.setTitle(e.target.value);
+    item.setTitle(e.target.value);  
   }
+
+  const onOptionRemove = (question: ISurveyQuestion) => {
+    item.removeOption(question);
+  }
+
+  const saveSurvey = () => {
+    item.save();
+  }
+
+  const question = item.questions.map((item) => (<Options question={item} key={item.id} onQuestionRemove={onOptionRemove} />));
 
   return (
     <UiPopup 
@@ -39,11 +45,11 @@ const AddPopup = (props: any) => {
 
         <hr />
 
-        <Options />
+        {question}
 
         <div className="btn-group" role="group" aria-label="Basic example">
-          <button type="button" className="btn btn-success">Add Question</button>
-          <button type="button" className="btn btn-primary">Create Survey</button>
+          <button type="button" className="btn btn-success" onClick={() => item.createOption()}>Add Question</button>
+          <button type="button" className="btn btn-primary" onClick={() => saveSurvey()}>Create Survey</button>
         </div>
       </form>
     </UiPopup>

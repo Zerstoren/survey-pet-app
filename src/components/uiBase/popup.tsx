@@ -1,4 +1,4 @@
-import React, { ClassAttributes, Props } from 'react';
+import React from 'react';
 
 const UiPopup = (props: any) => {
 

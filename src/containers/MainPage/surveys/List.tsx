@@ -1,14 +1,14 @@
+import { inject, observer } from 'mobx-react';
 import React, { useEffect } from 'react';
-import SurveyItem from './Item';
-import { observer, inject } from 'mobx-react';
 import { SurveyListStore } from '../../../stores/surveys/surveyList';
+import SurveyItem from './Item';
 
 const SurveyList = (props: any) => {
   const {surveyListStore} : {surveyListStore: SurveyListStore} = props;
 
   useEffect(() => {
     surveyListStore.loadList();
-  }, []);
+  }, [surveyListStore]);
 
   let survList = [];
 
