@@ -1,5 +1,5 @@
 import { inject, observer } from 'mobx-react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo} from 'react';
 import { MainStore } from '../../stores/mainState';
 import Header from './Header';
 import Content from './Content';
@@ -10,15 +10,12 @@ import SurveyItem from '../../stores/surveys/surveyItem';
 const MainPage = (props: any) => {
   const {mainStore} : {mainStore: MainStore} = props;
 
-  let popupAdd = null;
+  let popupAdd: JSX.Element | null = useMemo(() : JSX.Element => (<AddPopup item={new SurveyItem()} />), []);
   
-  if (mainStore.isShowAddSurveyPopup) {
-    popupAdd = hocCreateWithNewItem<SurveyItem>(
-      AddPopup,
-      () => {item: new SurveyItem()}
-    );
+  if (!mainStore.isShowAddSurveyPopup) {
+    popupAdd = null;
   }
-
+  
   return (
     <>
       {popupAdd}
