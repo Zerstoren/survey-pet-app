@@ -8,12 +8,6 @@ const SurveyItem = types.model("Survey", {
   title: types.optional(types.string, ''),
   questions: types.array(types.reference(SurveyQuestion)),
 }).actions(self => {
-  const afterCreate = () => {
-    if (self.questions.length === 0) {
-      // createOption();
-    }
-  };
-
   const setTitle = (title: string) => {
     self.title = title;
   }
@@ -31,7 +25,6 @@ const SurveyItem = types.model("Survey", {
   }
 
   return {
-    afterCreate,
     setTitle,
     createQuestion,
     removeQuestion,

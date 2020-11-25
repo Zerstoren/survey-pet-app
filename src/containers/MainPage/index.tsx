@@ -1,8 +1,6 @@
 import { inject, observer } from 'mobx-react';
 import React, { useMemo } from 'react';
-import { getUniqueInt } from '../../helpers/fns/math';
 import { MainStore } from '../../stores/mainState';
-import SurveyItem from '../../stores/surveys/surveyItem';
 import SurveyItemMeta from '../../stores/surveys/surveyItemMeta';
 import Content from './Content';
 import Header from './Header';

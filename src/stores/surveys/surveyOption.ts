@@ -1,5 +1,4 @@
 import { Instance, types } from "mobx-state-tree";
-import { getUniqueKey } from "../../helpers/fns/math";
 
 const SurveyOption = types.model("SurvetOption", {
   id: types.identifierNumber,

@@ -1,5 +1,4 @@
 import { Instance, types } from "mobx-state-tree";
-import { getUniqueInt } from "../../helpers/fns/math";
 import SurveyOption, { ISurveyOption } from "./surveyOption";
 
 enum SELECT_TYPE {
@@ -14,12 +13,6 @@ const SurveyQuestion = types.model("SurveyQuestion", {
   questionType: types.optional(types.enumeration<SELECT_TYPE>('SELECT_TYPE', [SELECT_TYPE.SINGLE, SELECT_TYPE.MULTI]), SELECT_TYPE.SINGLE),
   options: types.array(types.reference(SurveyOption))
 }).actions(self => {
-  const afterCreate = () => {
-    if (self.options.length === 0) {
-      
-    }
-  }
-
   const createOption = (option: ISurveyOption) => {
     self.options.push(option);
   };
@@ -37,7 +30,6 @@ const SurveyQuestion = types.model("SurveyQuestion", {
   };
 
   return {
-    afterCreate,
     createOption,
     removeOption,
     setQuestionTitle,

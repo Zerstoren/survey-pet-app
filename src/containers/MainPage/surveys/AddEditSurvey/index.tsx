@@ -37,7 +37,7 @@ const AddPopup = (props: any) => {
   const createQuestion = () => {
     itemMeta.createQuestion();
   }
-
+console.log(survey.questions);
   const question = survey.questions.map(
     (question) => (<Options itemMeta={itemMeta} question={question} key={question.id} onQuestionRemove={onQuestionRemove} />)
   );
