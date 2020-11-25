@@ -1,5 +1,5 @@
 import { getSnapshot, Instance, types } from "mobx-state-tree";
-import { getUniqueInt } from "../../helpers/fns/math";
+import { getUniqueDecrementInt } from "../../helpers/fns/math";
 import SurveyQuestion, { ISurveyQuestion } from "./surveyQuestion";
 
 const SurveyItem = types.model("Survey", {

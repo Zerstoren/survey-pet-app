@@ -1,22 +1,12 @@
-import { inject, observer } from 'mobx-react';
-import React, { useEffect } from 'react';
-import { SurveyListStore } from '../../../stores/surveys/surveyList';
+import { observer } from 'mobx-react';
+import React, { useEffect, useMemo } from 'react';
+import SurveyListStore, { ISurveyListStore } from '../../../stores/surveys/surveyList';
 import SurveyItem from './Item';
 
-const SurveyList = (props: any) => {
-  const {surveyListStore} : {surveyListStore: SurveyListStore} = props;
-
-  useEffect(() => {
-    surveyListStore.loadList();
-  }, [surveyListStore]);
-
-  let survList = [];
-
-  for(let i = 0; i < 20; i++) {
-    survList.push(
-      <SurveyItem key={i} />
-    );
-  }
+const SurveyList = ({surveyListStore}: {surveyListStore: ISurveyListStore}) => {
+  let survList = surveyListStore.surveys.map((survey) => {
+    return (<SurveyItem key={survey.id} survey={survey} />);
+  });
 
   return (
     <div className="surveys-list d-flex flex-row flex-wrap justify-content-around">
@@ -25,4 +15,4 @@ const SurveyList = (props: any) => {
   );
 }
 
-export default inject("surveyListStore")(observer(SurveyList));
+export default observer(SurveyList);

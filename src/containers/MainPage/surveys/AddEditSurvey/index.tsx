@@ -1,7 +1,7 @@
 import { inject, observer } from 'mobx-react';
 import React, { useState } from 'react';
 import UiPopup from '../../../../components/uiBase/popup';
-import { getUniqueInt } from '../../../../helpers/fns/math';
+import { getUniqueDecrementInt } from '../../../../helpers/fns/math';
 import { MainStore } from '../../../../stores/mainState';
 import { ISurveyItem } from '../../../../stores/surveys/surveyItem';
 import { ISurveyItemMeta } from '../../../../stores/surveys/surveyItemMeta';

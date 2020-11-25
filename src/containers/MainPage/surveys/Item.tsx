@@ -1,7 +1,8 @@
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import React from 'react';
+import { ISurveyItem } from '../../../stores/surveys/surveyItem';
 
-const SurveyItem = (props: any) => {
+const SurveyItem = ({survey}: {survey: ISurveyItem}) => {
   return (
     <div className="surveys-item">
       <div className="time-to-suspend">
@@ -14,7 +15,7 @@ const SurveyItem = (props: any) => {
 
       <div className="survey-block">
         <div className="survey-title">
-          Should we cycling?
+          {survey.title}
         </div>
         <div className="survey-start">
           <button className="btn btn-outline-primary">Take a survey</button>
@@ -24,4 +25,4 @@ const SurveyItem = (props: any) => {
   );
 }
 
-export default inject("surveyListStore")(observer(SurveyItem));
+export default observer(SurveyItem);

@@ -6,15 +6,21 @@ const getRandomInt = (min: number, max: number) : number => {
 
 let lastIncrementInt = 0;
 const getUniqueKey = (prefix: string = '') : string => {
-  return `${prefix}${(lastIncrementInt++)}`;
+  return `${prefix}${(++lastIncrementInt)}`;
 }
 
 const getUniqueInt = () : number => {
   return (lastIncrementInt++);
 }
 
+let lastDecrementInt = 0;
+const getUniqueDecrementInt = () : number => {
+  return (--lastDecrementInt);
+}
+
 export {
   getRandomInt,
+  getUniqueDecrementInt,
   getUniqueInt,
   getUniqueKey
 }
