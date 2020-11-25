@@ -1,36 +1,46 @@
 import { inject, observer } from 'mobx-react';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import UiPopup from '../../../../components/uiBase/popup';
+import { getUniqueInt } from '../../../../helpers/fns/math';
 import { MainStore } from '../../../../stores/mainState';
-import SurveyItem, { ISurveyItem } from '../../../../stores/surveys/surveyItem';
+import { ISurveyItem } from '../../../../stores/surveys/surveyItem';
+import { ISurveyItemMeta } from '../../../../stores/surveys/surveyItemMeta';
 import SurveyQuestion, { ISurveyQuestion } from '../../../../stores/surveys/surveyQuestion';
 import Options from './Question';
 
 const AddPopup = (props: any) => {
   const {
     mainStore,
-    item,
+    itemMeta: itemMeta,
   }: {
     mainStore: MainStore,
-    item: ISurveyItem
+    itemMeta: ISurveyItemMeta
   } = props;
 
-  const [title, setTitle] = useState(item.title || '');
+  const [title, setTitle] = useState(itemMeta.survey.title || '');
+
+  const survey = itemMeta.survey;
   
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
-    item.setTitle(e.target.value);  
+    survey.setTitle(e.target.value);  
   }
 
-  const onOptionRemove = (question: ISurveyQuestion) => {
-    item.removeOption(question);
+  const onQuestionRemove = (question: ISurveyQuestion) => {
+    itemMeta.removeQuestion(question);
   }
 
   const saveSurvey = () => {
-    item.save();
+    itemMeta.save();
   }
 
-  const question = item.questions.map((item) => (<Options question={item} key={item.id} onQuestionRemove={onOptionRemove} />));
+  const createQuestion = () => {
+    itemMeta.createQuestion();
+  }
+
+  const question = survey.questions.map(
+    (question) => (<Options itemMeta={itemMeta} question={question} key={question.id} onQuestionRemove={onQuestionRemove} />)
+  );
 
   return (
     <UiPopup 
@@ -48,8 +58,8 @@ const AddPopup = (props: any) => {
         {question}
 
         <div className="btn-group" role="group" aria-label="Basic example">
-          <button type="button" className="btn btn-success" onClick={() => item.createOption()}>Add Question</button>
-          <button type="button" className="btn btn-primary" onClick={() => saveSurvey()}>Create Survey</button>
+          <button type="button" className="btn btn-success" onClick={createQuestion}>Add Question</button>
+          <button type="button" className="btn btn-primary" onClick={saveSurvey}>Create Survey</button>
         </div>
       </form>
     </UiPopup>

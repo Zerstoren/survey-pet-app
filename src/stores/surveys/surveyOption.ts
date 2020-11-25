@@ -1,10 +1,11 @@
 import { Instance, types } from "mobx-state-tree";
 import { getUniqueKey } from "../../helpers/fns/math";
 
-const SurveyOption = types.model({
-  id: types.identifier,
-  text: types.string,
-  position: types.number
+const SurveyOption = types.model("SurvetOption", {
+  id: types.identifierNumber,
+  isNew: types.optional(types.boolean, true),
+  text: types.optional(types.string, ''),
+  position: types.optional(types.number, 0)
 }).actions(self => ({
   setText(text: string) {
     self.text = text;

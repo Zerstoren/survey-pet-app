@@ -4,7 +4,7 @@ import { SELECT_TYPE } from '../../../../stores/surveys/surveyQuestion';
 
 
 const QuestionSelectType = (
-  {defaultValue, uniqueId: uniqueId}: {defaultValue: SELECT_TYPE, uniqueId: string}
+  {defaultValue, uniqueId: uniqueId}: {defaultValue: SELECT_TYPE, uniqueId: number}
 ) => {
   const [questionType, setQuestionType] = useState(defaultValue);
 

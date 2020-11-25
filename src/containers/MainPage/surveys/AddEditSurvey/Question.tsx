@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react';
 import React, { useState } from 'react';
+import { ISurveyItemMeta } from '../../../../stores/surveys/surveyItemMeta';
 import { ISurveyOption } from '../../../../stores/surveys/surveyOption';
 import { ISurveyQuestion } from '../../../../stores/surveys/surveyQuestion';
 import Option from './Option';
@@ -8,9 +9,11 @@ import QuestionSelectType from './QuestionSelectType';
 
 const Options = (props: any) => {
   const {
+    itemMeta,
     question,
     onQuestionRemove
   }: {
+    itemMeta: ISurveyItemMeta
     question: ISurveyQuestion,
     onQuestionRemove: Function
   } = props;
@@ -22,8 +25,12 @@ const Options = (props: any) => {
     question.setQuestionTitle(e.target.value);
   }
 
+  const onAddOption = () => {
+    itemMeta.createOption(question);
+  }
+  
   const onOptionRemove = (option: ISurveyOption) => {
-    question.removeOption(option);
+    itemMeta.removeOption(question, option);
   }
 
   let index = 1;
@@ -46,7 +53,7 @@ const Options = (props: any) => {
         {options}
 
         <div className="input-group input-group-sm mb-2">
-          <input type="button" className="form-control form-control-sm btn btn-info" value="+" onClick={() => question.createOption()} />
+          <input type="button" className="form-control form-control-sm btn btn-info" value="+" onClick={onAddOption} />
         </div>
       </div>
 

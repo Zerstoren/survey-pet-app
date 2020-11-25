@@ -1,5 +1,5 @@
 import { Instance, types } from "mobx-state-tree";
-import { getUniqueKey } from "../../helpers/fns/math";
+import { getUniqueInt } from "../../helpers/fns/math";
 import SurveyOption, { ISurveyOption } from "./surveyOption";
 
 enum SELECT_TYPE {
@@ -7,29 +7,43 @@ enum SELECT_TYPE {
   MULTI = 'multi'
 }
 
-const SurveyQuestion = types.model({
-  id: types.identifier,
-  questionTitle: types.string,
-  questionType: types.enumeration<SELECT_TYPE>('SELECT_TYPE', [SELECT_TYPE.SINGLE, SELECT_TYPE.MULTI]),
-  options: types.array(SurveyOption)
-}).actions(self => ({
-  createOption() {
-    self.options.push(SurveyOption.create({
-      id: getUniqueKey('option_id_'),
-      text: '',
-      position: 0
-    }));
-  },
-  removeOption(option: ISurveyOption) {
-    self.options.remove(option);
-  },
-  setQuestionTitle(title: string) {
-    self.questionTitle = title;
-  },
-  setQuestionType(type: SELECT_TYPE) {
-    self.questionType = type;
+const SurveyQuestion = types.model("SurveyQuestion", {
+  id: types.identifierNumber,
+  isNew: types.optional(types.boolean, true),
+  questionTitle: types.optional(types.string, ''),
+  questionType: types.optional(types.enumeration<SELECT_TYPE>('SELECT_TYPE', [SELECT_TYPE.SINGLE, SELECT_TYPE.MULTI]), SELECT_TYPE.SINGLE),
+  options: types.array(types.reference(SurveyOption))
+}).actions(self => {
+  const afterCreate = () => {
+    if (self.options.length === 0) {
+      
+    }
   }
-}));
+
+  const createOption = (option: ISurveyOption) => {
+    self.options.push(option);
+  };
+
+  const removeOption = (option: ISurveyOption) => {
+    self.options.remove(option);
+  };
+
+  const setQuestionTitle = (title: string) => {
+    self.questionTitle = title;
+  };
+
+  const setQuestionType = (type: SELECT_TYPE) => {
+    self.questionType = type;
+  };
+
+  return {
+    afterCreate,
+    createOption,
+    removeOption,
+    setQuestionTitle,
+    setQuestionType,
+  }
+});
 
 type ISurveyQuestion = Instance<typeof SurveyQuestion>;
 

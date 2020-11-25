@@ -9,7 +9,12 @@ const getUniqueKey = (prefix: string = '') : string => {
   return `${prefix}${(lastIncrementInt++)}`;
 }
 
+const getUniqueInt = () : number => {
+  return (lastIncrementInt++);
+}
+
 export {
   getRandomInt,
+  getUniqueInt,
   getUniqueKey
 }
