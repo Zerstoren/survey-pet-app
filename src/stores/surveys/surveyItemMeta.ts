@@ -1,5 +1,6 @@
-import { getSnapshot, Instance, types } from "mobx-state-tree";
+import { flow, getSnapshot, Instance, types } from "mobx-state-tree";
 import { getUniqueInt } from "../../helpers/fns/math";
+import { saveMetaSurvey } from "../../storageEmulate/surveyList";
 import SurveyItem from "./surveyItem";
 import SurveyOption, { ISurveyOption } from "./surveyOption";
 import SurveyQuestion, { ISurveyQuestion } from "./surveyQuestion";
@@ -23,7 +24,7 @@ const SurveyItemMeta = types.model({
   }
 
   const removeQuestion = (question: ISurveyQuestion) => {
-    self.survey.removeQuestion(question);
+    question.options.map((option) => option && removeOption(option));
     self.questionsList.remove(question);
   }
 
@@ -33,14 +34,21 @@ const SurveyItemMeta = types.model({
     question.createOption(option);
   }
 
-  const removeOption = (question: ISurveyQuestion, option: ISurveyOption) => {
-    question.removeOption(option);
+  const removeOption = (option: ISurveyOption) => {
     self.optionsList.remove(option);
   }
 
-  const save = () => {
-    console.log(getSnapshot(self));
-  }
+  const save = flow(function*() {
+    let snapshot = getSnapshot(self);
+    let p;
+    try {
+      p = yield saveMetaSurvey(snapshot);
+    } catch (e) {
+      debugger;
+    }
+
+    return p;
+  });
 
   return {
     afterCreate,

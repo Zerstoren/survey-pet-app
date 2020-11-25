@@ -6,7 +6,7 @@ const SurveyItem = types.model("Survey", {
   id: types.identifierNumber,
   isNew: types.optional(types.boolean, true),
   title: types.optional(types.string, ''),
-  questions: types.array(types.reference(SurveyQuestion)),
+  questions: types.array(types.safeReference(SurveyQuestion)),
 }).actions(self => {
   const setTitle = (title: string) => {
     self.title = title;

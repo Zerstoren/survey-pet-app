@@ -30,11 +30,13 @@ const Options = (props: any) => {
   }
   
   const onOptionRemove = (option: ISurveyOption) => {
-    itemMeta.removeOption(question, option);
+    itemMeta.removeOption(option);
   }
 
   let index = 1;
-  const options = question.options.map((option) => (<Option key={option.id} position={index++} option={option} optionRemove={onOptionRemove} />))
+  const options = question.options.map(
+    (option) => option ? (<Option key={option.id} position={index++} option={option} optionRemove={onOptionRemove} />) : null
+  );
 
   return (
     <>

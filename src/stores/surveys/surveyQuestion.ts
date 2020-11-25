@@ -11,7 +11,7 @@ const SurveyQuestion = types.model("SurveyQuestion", {
   isNew: types.optional(types.boolean, true),
   questionTitle: types.optional(types.string, ''),
   questionType: types.optional(types.enumeration<SELECT_TYPE>('SELECT_TYPE', [SELECT_TYPE.SINGLE, SELECT_TYPE.MULTI]), SELECT_TYPE.SINGLE),
-  options: types.array(types.reference(SurveyOption))
+  options: types.array(types.safeReference(SurveyOption))
 }).actions(self => {
   const createOption = (option: ISurveyOption) => {
     self.options.push(option);
