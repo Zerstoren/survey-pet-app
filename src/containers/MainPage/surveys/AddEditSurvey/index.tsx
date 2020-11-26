@@ -1,5 +1,6 @@
 import { inject, observer } from 'mobx-react';
 import React, { useState } from 'react';
+import { Field, Form } from 'react-final-form';
 import UiPopup from '../../../../components/uiBase/popup';
 import { IMainStore } from '../../../../stores/mainState';
 import { ISurveyItemMeta } from '../../../../stores/surveys/surveyItemMeta';
@@ -41,26 +42,47 @@ const AddPopup = ({
     (question) => question ? (<Options itemMeta={itemMeta} question={question} key={question.id} onQuestionRemove={onQuestionRemove} />) : null
   );
 
+  interface Values {
+    title: string
+  }
+  const onSubmit = (values: Values) => {
+
+  }
+
+  const validateForm = () => {
+    return {};
+  }
+
   return (
     <UiPopup 
       title="Add new survey" 
       onClose={() => mainStore && mainStore.setIsShowAddSurveyPopup(false)}
     >
-      <form>
-        <div className="form-group">
-          <label>Survey title</label>
-          <input name="name" className="form-control" value={title} onChange={onChangeTitle} />
-        </div>
-
-        <hr />
-
-        {question}
-
-        <div className="btn-group" role="group" aria-label="Basic example">
-          <button type="button" className="btn btn-success" onClick={createQuestion}>Add Question</button>
-          <button type="button" className="btn btn-primary" onClick={saveSurvey}>Create Survey</button>
-        </div>
-      </form>
+      <Form 
+        onSubmit={onSubmit}
+        validate={validateForm}
+        render={({handleSubmit, form}) => (
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Survey title</label>
+              <Field name="title">
+                {((input, meta) => (
+                  <input {...input} className="form-control" value={title} onChange={onChangeTitle} />
+                ))}
+              </Field>
+            </div>
+    
+            <hr />
+    
+            {question}
+    
+            <div className="btn-group" role="group" aria-label="Basic example">
+              <button type="button" className="btn btn-success" onClick={createQuestion}>Add Question</button>
+              <button type="button" className="btn btn-primary" onClick={saveSurvey}>Create Survey</button>
+            </div>
+          </form>
+        )}
+      />
     </UiPopup>
   )
 }
