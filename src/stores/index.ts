@@ -1,7 +1,7 @@
-import mainStore, { MainStore } from './mainState';
+import mainStore, { IMainStore } from './mainState';
 
 interface IStores {
-  mainStore: MainStore
+  mainStore: IMainStore
 }
 
 const Stores: IStores = {

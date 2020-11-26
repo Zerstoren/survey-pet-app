@@ -1,25 +1,22 @@
-import { action, observable, computed, makeObservable } from 'mobx';
+import { Instance, types } from 'mobx-state-tree';
 
-class MainStore {
-  @observable public errors: Array<Error> = [];
-  @observable public isShowAddSurveyPopup: boolean = false;
-
-  constructor() {
-    makeObservable(this);
+const MainStore = types.model({
+  reloadIndex: types.optional(types.number, 0),
+  isShowAddSurveyPopup: types.optional(types.boolean, false),
+  searchTextMainPage: types.optional(types.string, ''),
+}).actions(self => ({
+  setIsShowAddSurveyPopup(isShow: boolean) {
+    self.isShowAddSurveyPopup = isShow;
+  },
+  reloadListOnMainPage() {
+    self.reloadIndex += 1;
+  },
+  searchOnMainPage(text: string) {
+    self.searchTextMainPage = text;
   }
+}));
 
-  @computed get getLastError () : Error {
-    return this.errors[this.errors.length - 1];
-  }
-  
-  @action registerError = async (e: Error) => {
-    this.errors.push(e);
-  }
+type IMainStore = Instance<typeof MainStore>;
 
-  @action setIsShowAddSurveyPopup = (isShow: boolean) => {
-    this.isShowAddSurveyPopup = isShow;
-  }
-}
-
-export { MainStore };
-export default new MainStore();
+export type { IMainStore };
+export default MainStore.create();

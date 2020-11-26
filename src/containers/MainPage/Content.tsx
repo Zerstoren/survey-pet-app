@@ -1,14 +1,20 @@
-import { observer } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import React, { useEffect, useMemo } from 'react';
+import { IMainStore } from '../../stores/mainState';
 import SurveyListStore from '../../stores/surveys/surveyList';
 import SurveyList from './surveys/List';
 
-const Content = () => {
+const Content = ({
+  mainStore
+} : {
+  mainStore?: IMainStore
+}) => {
   let surveyListStore = useMemo(() => SurveyListStore.create(), []);
   
   useEffect(() => {
+    surveyListStore.applySearchText(mainStore?.searchTextMainPage || '');
     surveyListStore.loadList();
-  }, [surveyListStore]);
+  }, [mainStore?.reloadIndex, mainStore?.searchTextMainPage]);
   
   return (
     <div className="content">
@@ -23,4 +29,4 @@ const Content = () => {
   );
 }
 
-export default observer(Content);
+export default inject('mainStore')(observer(Content));

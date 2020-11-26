@@ -1,21 +1,18 @@
 import { inject, observer } from 'mobx-react';
 import React, { useState } from 'react';
 import UiPopup from '../../../../components/uiBase/popup';
-import { getUniqueDecrementInt } from '../../../../helpers/fns/math';
-import { MainStore } from '../../../../stores/mainState';
-import { ISurveyItem } from '../../../../stores/surveys/surveyItem';
+import { IMainStore } from '../../../../stores/mainState';
 import { ISurveyItemMeta } from '../../../../stores/surveys/surveyItemMeta';
-import SurveyQuestion, { ISurveyQuestion } from '../../../../stores/surveys/surveyQuestion';
+import { ISurveyQuestion } from '../../../../stores/surveys/surveyQuestion';
 import Options from './Question';
 
-const AddPopup = (props: any) => {
-  const {
-    mainStore,
-    itemMeta: itemMeta,
-  }: {
-    mainStore: MainStore,
-    itemMeta: ISurveyItemMeta
-  } = props;
+const AddPopup = ({
+  mainStore,
+  itemMeta,
+}: {
+  mainStore?: IMainStore,
+  itemMeta: ISurveyItemMeta
+}) => {
 
   const [title, setTitle] = useState(itemMeta.survey.title || '');
 
@@ -32,6 +29,8 @@ const AddPopup = (props: any) => {
 
   const saveSurvey = () => {
     itemMeta.save();
+    mainStore?.reloadListOnMainPage();
+    mainStore?.setIsShowAddSurveyPopup(false);
   }
 
   const createQuestion = () => {
@@ -45,7 +44,7 @@ const AddPopup = (props: any) => {
   return (
     <UiPopup 
       title="Add new survey" 
-      onClose={() => mainStore.setIsShowAddSurveyPopup(false)}
+      onClose={() => mainStore && mainStore.setIsShowAddSurveyPopup(false)}
     >
       <form>
         <div className="form-group">

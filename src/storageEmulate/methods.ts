@@ -130,7 +130,8 @@ const getBySelector = async <T extends IRecord>(storage: string, fn: IGetSelecto
 
 export type {
   IRecord,
-  IMapReplaceIds as IReplaceIds
+  IMapReplaceIds as IReplaceIds,
+  IGetSelectorFunction
 }
 
 export {

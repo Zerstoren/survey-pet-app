@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react';
 import React from 'react';
+import { Link as NavLink } from 'react-router-dom';
 import { ISurveyItem } from '../../../stores/surveys/surveyItem';
 
 const SurveyItem = ({survey}: {survey: ISurveyItem}) => {
@@ -18,7 +19,11 @@ const SurveyItem = ({survey}: {survey: ISurveyItem}) => {
           {survey.title}
         </div>
         <div className="survey-start">
-          <button className="btn btn-outline-primary">Take a survey</button>
+          <NavLink to={`/survey/${survey.id}`}>
+            <button className="btn btn-outline-primary">
+                Take a survey
+            </button>
+          </NavLink>
         </div>
       </div>
     </div>
