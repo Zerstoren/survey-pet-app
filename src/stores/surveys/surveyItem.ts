@@ -3,7 +3,7 @@ import { getUniqueDecrementInt } from "../../helpers/fns/math";
 import SurveyQuestion, { ISurveyQuestion } from "./surveyQuestion";
 
 const SurveyItem = types.model("Survey", {
-  id: types.identifierNumber,
+  id: types.optional(types.identifierNumber, () => getUniqueDecrementInt()),
   isNew: types.optional(types.boolean, true),
   title: types.optional(types.string, ''),
   questions: types.array(types.safeReference(SurveyQuestion)),

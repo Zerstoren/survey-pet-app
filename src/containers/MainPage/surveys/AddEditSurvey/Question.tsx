@@ -1,9 +1,9 @@
 import React from 'react';
 import { Field } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
-import { required } from '../../../../helpers/validators/default';
-import Answer from './Answers';
-import QuestionSelectType from './QuestionSelectType';
+import Answer from './fields/AnswersText';
+import QuestionSelectType from './fields/QuestionSelectType';
+import QuestionTitle from './fields/QuestionTitle';
 
 const Options = ({
   questionIndex,
@@ -18,35 +18,7 @@ const Options = ({
 }) => {
   return (
     <>
-      <Field
-        name={`${namePath}.title`}
-        validate={required}
-      >
-        {({input, meta}) => {
-          let classNameGroup = 'input-group';
-          let classNameInput = 'form-control';
-          let errorMsg = null;
-          if (meta.error && meta.touched) {
-            errorMsg = (<div className="invalid-feedback mb-3">{meta.error}</div>);
-            classNameInput += ' is-invalid';
-            classNameGroup += ' is-invalid';
-          } else {
-            classNameGroup += ' mb-3';
-          }
-
-          return (
-            <>
-              <div className={classNameGroup}>
-                <input {...input} className={classNameInput} />
-                <div className="input-group-append">
-                  <button className="btn btn-warning" type="button" onClick={() => onQuestionRemove()}> - </button>
-                </div>
-              </div>
-              {errorMsg}
-            </>
-          )
-        }}
-      </Field>
+      <QuestionTitle namePath={namePath} onQuestionRemove={onQuestionRemove} />
 
       <QuestionSelectType 
         index={questionIndex} 
@@ -64,7 +36,7 @@ const Options = ({
           {({fields}) => fields.map((name, index) => (
             <Answer 
               key={index} 
-              namePath={`${namePath}.options[${index}]`} 
+              namePath={name} 
               optionIndex={index}
               optionRemove={() => fields.remove(index)}
             />

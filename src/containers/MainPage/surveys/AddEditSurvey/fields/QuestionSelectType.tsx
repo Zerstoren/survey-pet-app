@@ -1,6 +1,6 @@
 import React from 'react';
 import { Field } from 'react-final-form';
-import { SELECT_TYPE } from '../../../../stores/surveys/surveyQuestion';
+import { SELECT_TYPE } from '../../../../../stores/surveys/surveyQuestion';
 
 const Radio = ({
   index, 

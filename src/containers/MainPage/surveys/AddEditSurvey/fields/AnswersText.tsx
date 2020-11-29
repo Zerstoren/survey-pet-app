@@ -1,6 +1,6 @@
 import React from 'react';
 import { Field } from 'react-final-form';
-import { required } from '../../../../helpers/validators/default';
+import { required } from '../../../../../helpers/validators/default';
 
 const Answer = ({
   optionIndex,

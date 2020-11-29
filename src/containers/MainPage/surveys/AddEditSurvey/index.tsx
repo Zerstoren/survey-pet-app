@@ -5,11 +5,11 @@ import { Field, Form } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
 import UiPopup from '../../../../components/uiBase/popup';
 import createSurveyValidator from '../../../../helpers/validators/createSurveyValidator';
-import { required } from '../../../../helpers/validators/default';
 import { IMainStore } from '../../../../stores/mainState';
-import { ISurveyItem } from '../../../../stores/surveys/surveyItem';
-import { ISurveyItemMeta } from '../../../../stores/surveys/surveyItemMeta';
-import { SELECT_TYPE } from '../../../../stores/surveys/surveyQuestion';
+import SurveyItemMeta, { ISurveyItemMeta } from '../../../../stores/surveys/surveyItemMeta';
+import SurveyOption from '../../../../stores/surveys/surveyOption';
+import SurveyQuestion, { SELECT_TYPE } from '../../../../stores/surveys/surveyQuestion';
+import SurveyTitle from './fields/SurvetTitle';
 import Questions from './Question';
 
 
@@ -21,7 +21,28 @@ const AddPopup = ({
   itemMeta: ISurveyItemMeta
 }) => {
   const onSubmit = (values: any) => {
-    console.log(values);
+    // How to do this correct with types?
+    let options: Array<any> = [];
+    let questions: Array<any> = [];
+    values.questions = values.questions.map((question: any) => {
+      question.options = question.options.map((option: any) => {
+        let opt = SurveyOption.create(option);
+        options.push(option);
+        return opt.id;
+      });
+
+      let ques = SurveyQuestion.create(question);
+      questions.push(ques);
+      return ques.id;
+    });
+    SurveyItemMeta.create({
+      survey: values,
+      optionsList: options,
+      questionsList: questions
+    }).save();
+    
+    mainStore?.reloadListOnMainPage();
+    mainStore?.setIsShowAddSurveyPopup(false);
   }
 
   const initialQuestionValue = {
@@ -49,29 +70,7 @@ const AddPopup = ({
           }
         }) => (
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Survey title</label>
-              <Field
-                name="title" 
-                validate={required}
-              >
-                {({input, meta}) => {
-                  let className = 'form-control';
-                  let errorMsg = null;
-                  if (meta.error && meta.touched) {
-                    errorMsg = (<div className="invalid-feedback">{meta.error}</div>);
-                    className += ' is-invalid';
-                  }
-
-                  return (
-                    <>
-                      <input {...input} className={className} />
-                      {errorMsg}
-                    </>
-                  )
-                }}
-              </Field>
-            </div>
+            <SurveyTitle />
     
             <hr />
 
@@ -83,7 +82,7 @@ const AddPopup = ({
                 {({fields}) => fields.map((name, index) => (
                   <Questions 
                     key={index} 
-                    namePath={`questions[${index}]`}
+                    namePath={name}
                     questionIndex={index} 
                     push={push}
                     onQuestionRemove={() => fields.remove(index)} />
