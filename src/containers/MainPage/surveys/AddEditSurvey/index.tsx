@@ -1,10 +1,17 @@
+import arrayMutators from 'final-form-arrays';
 import { inject, observer } from 'mobx-react';
-import React, { useState } from 'react';
+import React from 'react';
+import { Field, Form } from 'react-final-form';
+import { FieldArray } from 'react-final-form-arrays';
 import UiPopup from '../../../../components/uiBase/popup';
+import createSurveyValidator from '../../../../helpers/validators/createSurveyValidator';
 import { IMainStore } from '../../../../stores/mainState';
-import { ISurveyItemMeta } from '../../../../stores/surveys/surveyItemMeta';
-import { ISurveyQuestion } from '../../../../stores/surveys/surveyQuestion';
-import Options from './Question';
+import SurveyItemMeta, { ISurveyItemMeta } from '../../../../stores/surveys/surveyItemMeta';
+import SurveyOption from '../../../../stores/surveys/surveyOption';
+import SurveyQuestion, { SELECT_TYPE } from '../../../../stores/surveys/surveyQuestion';
+import SurveyTitle from './fields/SurvetTitle';
+import Questions from './Question';
+
 
 const AddPopup = ({
   mainStore,
@@ -13,54 +20,82 @@ const AddPopup = ({
   mainStore?: IMainStore,
   itemMeta: ISurveyItemMeta
 }) => {
+  const onSubmit = (values: any) => {
+    // How to do this correct with types?
+    let options: Array<any> = [];
+    let questions: Array<any> = [];
+    values.questions = values.questions.map((question: any) => {
+      question.options = question.options.map((option: any) => {
+        let opt = SurveyOption.create(option);
+        options.push(option);
+        return opt.id;
+      });
 
-  const [title, setTitle] = useState(itemMeta.survey.title || '');
-
-  const survey = itemMeta.survey;
-  
-  const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-    survey.setTitle(e.target.value);  
-  }
-
-  const onQuestionRemove = (question: ISurveyQuestion) => {
-    itemMeta.removeQuestion(question);
-  }
-
-  const saveSurvey = () => {
-    itemMeta.save();
+      let ques = SurveyQuestion.create(question);
+      questions.push(ques);
+      return ques.id;
+    });
+    SurveyItemMeta.create({
+      survey: values,
+      optionsList: options,
+      questionsList: questions
+    }).save();
+    
     mainStore?.reloadListOnMainPage();
     mainStore?.setIsShowAddSurveyPopup(false);
   }
 
-  const createQuestion = () => {
-    itemMeta.createQuestion();
+  const initialQuestionValue = {
+    title: '',
+    questionType: SELECT_TYPE.SINGLE,
+    options: [{}, {}]
   }
-
-  const question = survey.questions.map(
-    (question) => question ? (<Options itemMeta={itemMeta} question={question} key={question.id} onQuestionRemove={onQuestionRemove} />) : null
-  );
 
   return (
     <UiPopup 
       title="Add new survey" 
-      onClose={() => mainStore && mainStore.setIsShowAddSurveyPopup(false)}
+      onClose={() => mainStore?.setIsShowAddSurveyPopup(false)}
     >
-      <form>
-        <div className="form-group">
-          <label>Survey title</label>
-          <input name="name" className="form-control" value={title} onChange={onChangeTitle} />
-        </div>
+      <Form 
+        onSubmit={onSubmit}
+        validate={createSurveyValidator}
+        initialValues={{title: '', questions: [initialQuestionValue]}}
+        mutators={{
+          ...arrayMutators
+        }}
+        render={({
+          handleSubmit, 
+          form: {
+            mutators: { push }
+          }
+        }) => (
+          <form onSubmit={handleSubmit}>
+            <SurveyTitle />
+    
+            <hr />
 
-        <hr />
+            <Field name="question">
+              {({input, meta}) => meta.error ? (<div className="alert alert-danger">{meta.error}</div>) : null}
+            </Field>
 
-        {question}
-
-        <div className="btn-group" role="group" aria-label="Basic example">
-          <button type="button" className="btn btn-success" onClick={createQuestion}>Add Question</button>
-          <button type="button" className="btn btn-primary" onClick={saveSurvey}>Create Survey</button>
-        </div>
-      </form>
+            <FieldArray name='questions'>
+                {({fields}) => fields.map((name, index) => (
+                  <Questions 
+                    key={index} 
+                    namePath={name}
+                    questionIndex={index} 
+                    push={push}
+                    onQuestionRemove={() => fields.remove(index)} />
+                ))}
+            </FieldArray>
+    
+            <div className="btn-group" role="group" aria-label="Basic example">
+              <button type="button" className="btn btn-success" onClick={() => push('questions', initialQuestionValue)}>Add Question</button>
+              <button type="button" className="btn btn-primary" onClick={() => handleSubmit()}>Create Survey</button>
+            </div>
+          </form>
+        )}
+      />
     </UiPopup>
   )
 }

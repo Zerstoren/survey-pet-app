@@ -1,4 +1,5 @@
 import { Instance, types } from "mobx-state-tree";
+import { getUniqueDecrementInt } from "../../helpers/fns/math";
 import SurveyOption, { ISurveyOption } from "./surveyOption";
 
 enum SELECT_TYPE {
@@ -7,7 +8,7 @@ enum SELECT_TYPE {
 }
 
 const SurveyQuestion = types.model("SurveyQuestion", {
-  id: types.identifierNumber,
+  id: types.optional(types.identifierNumber, () => getUniqueDecrementInt()),
   isNew: types.optional(types.boolean, true),
   questionTitle: types.optional(types.string, ''),
   questionType: types.optional(types.enumeration<SELECT_TYPE>('SELECT_TYPE', [SELECT_TYPE.SINGLE, SELECT_TYPE.MULTI]), SELECT_TYPE.SINGLE),

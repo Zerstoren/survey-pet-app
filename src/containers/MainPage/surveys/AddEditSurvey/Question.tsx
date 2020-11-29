@@ -1,61 +1,55 @@
-import { observer } from 'mobx-react';
-import React, { useState } from 'react';
-import { ISurveyItemMeta } from '../../../../stores/surveys/surveyItemMeta';
-import { ISurveyOption } from '../../../../stores/surveys/surveyOption';
-import { ISurveyQuestion } from '../../../../stores/surveys/surveyQuestion';
-import Option from './Option';
-import QuestionSelectType from './QuestionSelectType';
+import React from 'react';
+import { Field } from 'react-final-form';
+import { FieldArray } from 'react-final-form-arrays';
+import Answer from './fields/AnswersText';
+import QuestionSelectType from './fields/QuestionSelectType';
+import QuestionTitle from './fields/QuestionTitle';
 
-
-const Options = (props: any) => {
-  const {
-    itemMeta,
-    question,
-    onQuestionRemove
-  }: {
-    itemMeta: ISurveyItemMeta
-    question: ISurveyQuestion,
-    onQuestionRemove: Function
-  } = props;
-
-  const [questionTitle, setQuestionTitle] = useState(question.questionTitle || '');
-
-  const onChangeQuestion = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuestionTitle(e.target.value);
-    question.setQuestionTitle(e.target.value);
-  }
-
-  const onAddOption = () => {
-    itemMeta.createOption(question);
-  }
-  
-  const onOptionRemove = (option: ISurveyOption) => {
-    itemMeta.removeOption(option);
-  }
-
-  let index = 1;
-  const options = question.options.map(
-    (option) => option ? (<Option key={option.id} position={index++} option={option} optionRemove={onOptionRemove} />) : null
-  );
-
+const Options = ({
+  questionIndex,
+  namePath,
+  onQuestionRemove,
+  push
+}: {
+  questionIndex: number,
+  namePath: string,
+  onQuestionRemove: Function,
+  push: Function
+}) => {
   return (
     <>
-      <div className="input-group mb-3">
-        <input type="text" className="form-control" placeholder="Question" value={questionTitle} onChange={onChangeQuestion} />
-        <div className="input-group-append">
-          <button className="btn btn-warning" type="button" onClick={() => onQuestionRemove(question)}> - </button>
-        </div>
-      </div>
+      <QuestionTitle namePath={namePath} onQuestionRemove={onQuestionRemove} />
 
-      <QuestionSelectType defaultValue={question.questionType} uniqueId={question.id} />
+      <QuestionSelectType 
+        index={questionIndex} 
+        namePath={namePath}  
+      />
 
       <div className="form-group">
         <label>Answers: </label>
         
-        {options}
+        <Field name={`${namePath}.option`}>
+          {({input, meta}) => meta.error ? (<div className="alert alert-danger">{meta.error}</div>) : null}
+        </Field>
+
+        <FieldArray name={`${namePath}.options`}>
+          {({fields}) => fields.map((name, index) => (
+            <Answer 
+              key={index} 
+              namePath={name} 
+              optionIndex={index}
+              optionRemove={() => fields.remove(index)}
+            />
+          ))}
+        </FieldArray>
 
         <div className="input-group input-group-sm mb-2">
-          <input type="button" className="form-control form-control-sm btn btn-info" value="+" onClick={onAddOption} />
+          <input 
+            type="button" 
+            className="form-control form-control-sm btn btn-info" 
+            value="+" 
+            onClick={() => push(`${namePath}.options`)}
+          />
         </div>
       </div>
 
@@ -64,4 +58,4 @@ const Options = (props: any) => {
   )
 }
 
-export default observer(Options);
+export default Options;
