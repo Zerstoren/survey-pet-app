@@ -1,61 +1,83 @@
-import { observer } from 'mobx-react';
-import React, { useState } from 'react';
-import { ISurveyItemMeta } from '../../../../stores/surveys/surveyItemMeta';
-import { ISurveyOption } from '../../../../stores/surveys/surveyOption';
-import { ISurveyQuestion } from '../../../../stores/surveys/surveyQuestion';
-import Option from './Option';
+import React from 'react';
+import { Field } from 'react-final-form';
+import { FieldArray } from 'react-final-form-arrays';
+import { required } from '../../../../helpers/validators/default';
+import Answer from './Answers';
 import QuestionSelectType from './QuestionSelectType';
 
-
-const Options = (props: any) => {
-  const {
-    itemMeta,
-    question,
-    onQuestionRemove
-  }: {
-    itemMeta: ISurveyItemMeta
-    question: ISurveyQuestion,
-    onQuestionRemove: Function
-  } = props;
-
-  const [questionTitle, setQuestionTitle] = useState(question.questionTitle || '');
-
-  const onChangeQuestion = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuestionTitle(e.target.value);
-    question.setQuestionTitle(e.target.value);
-  }
-
-  const onAddOption = () => {
-    itemMeta.createOption(question);
-  }
-  
-  const onOptionRemove = (option: ISurveyOption) => {
-    itemMeta.removeOption(option);
-  }
-
-  let index = 1;
-  const options = question.options.map(
-    (option) => option ? (<Option key={option.id} position={index++} option={option} optionRemove={onOptionRemove} />) : null
-  );
-
+const Options = ({
+  questionIndex,
+  namePath,
+  onQuestionRemove,
+  push
+}: {
+  questionIndex: number,
+  namePath: string,
+  onQuestionRemove: Function,
+  push: Function
+}) => {
   return (
     <>
-      <div className="input-group mb-3">
-        <input type="text" className="form-control" placeholder="Question" value={questionTitle} onChange={onChangeQuestion} />
-        <div className="input-group-append">
-          <button className="btn btn-warning" type="button" onClick={() => onQuestionRemove(question)}> - </button>
-        </div>
-      </div>
+      <Field
+        name={`${namePath}.title`}
+        validate={required}
+      >
+        {({input, meta}) => {
+          let classNameGroup = 'input-group';
+          let classNameInput = 'form-control';
+          let errorMsg = null;
+          if (meta.error && meta.touched) {
+            errorMsg = (<div className="invalid-feedback mb-3">{meta.error}</div>);
+            classNameInput += ' is-invalid';
+            classNameGroup += ' is-invalid';
+          } else {
+            classNameGroup += ' mb-3';
+          }
 
-      <QuestionSelectType defaultValue={question.questionType} uniqueId={question.id} />
+          return (
+            <>
+              <div className={classNameGroup}>
+                <input {...input} className={classNameInput} />
+                <div className="input-group-append">
+                  <button className="btn btn-warning" type="button" onClick={() => onQuestionRemove()}> - </button>
+                </div>
+              </div>
+              {errorMsg}
+            </>
+          )
+        }}
+      </Field>
+
+      <QuestionSelectType 
+        index={questionIndex} 
+        namePath={namePath}  
+      />
 
       <div className="form-group">
         <label>Answers: </label>
         
-        {options}
+        <Field name={`${namePath}.option`}>
+          {({input, meta}) => meta.error ? (<div className="alert alert-danger">{meta.error}</div>) : null}
+        </Field>
+
+        <FieldArray name={`${namePath}.options`}>
+          {({fields}) => fields.map((name, index) => (
+            <Answer 
+              key={index} 
+              namePath={`${namePath}.options[${index}]`} 
+              optionIndex={index}
+              optionRemove={() => fields.remove(index)}
+            />
+          ))}
+        </FieldArray>
 
         <div className="input-group input-group-sm mb-2">
-          <input type="button" className="form-control form-control-sm btn btn-info" value="+" onClick={onAddOption} />
+          <input 
+            type="button" 
+            className="form-control form-control-sm btn btn-info" 
+            value="+" 
+            onClick={() => push(`${namePath}.options`)}
+          />
         </div>
       </div>
 
@@ -64,4 +86,4 @@ const Options = (props: any) => {
   )
 }
 
-export default observer(Options);
+export default Options;

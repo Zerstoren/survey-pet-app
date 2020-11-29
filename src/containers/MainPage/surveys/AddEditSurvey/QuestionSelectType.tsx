@@ -1,45 +1,60 @@
-import { observer } from 'mobx-react';
-import React, { useState } from 'react';
+import React from 'react';
+import { Field } from 'react-final-form';
 import { SELECT_TYPE } from '../../../../stores/surveys/surveyQuestion';
 
+const Radio = ({
+  index, 
+  namePath, 
+  value, 
+  label
+}: {
+  index: string, 
+  namePath: string, 
+  value: SELECT_TYPE, 
+  label: string
+}) => (
+  <div className="form-check form-check-inline">
+    <Field 
+      name={`${namePath}.questionType`}
+      component="input"
+      type="radio"
+      value={value} 
+    >
+      {({input, meta}) => (
+        <input 
+          {...input}
+          className="form-check-input" 
+          id={`inlineCheckbox_${index}`} 
+        />
+      )}
+    </Field>
+    <label className="form-check-label" htmlFor={`inlineCheckbox_${index}`}>{label}</label>
+  </div>
+);
 
-const QuestionSelectType = (
-  {defaultValue, uniqueId: uniqueId}: {defaultValue: SELECT_TYPE, uniqueId: number}
-) => {
-  const [questionType, setQuestionType] = useState(defaultValue);
-
-  const onChangeQuestionType = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value === 'single' ? SELECT_TYPE.SINGLE : SELECT_TYPE.MULTI;
-    setQuestionType(value);
-  }
-
+const QuestionSelectType = ({
+  index,
+  namePath
+}: {
+  index: number,
+  namePath: string
+}) => {
   return (
     <div className="form-group">
-      <div className="form-check form-check-inline">
-        <input 
-          className="form-check-input" 
-          type="radio" 
-          id={`inlineCheckbox_left_${uniqueId}`} 
-          value="single" 
-          onChange={onChangeQuestionType} 
-          checked={questionType === SELECT_TYPE.SINGLE} 
-        />
-        <label className="form-check-label" htmlFor={`inlineCheckbox_left_${uniqueId}`}>One answer</label>
-      </div>
-
-      <div className="form-check form-check-inline">
-        <input 
-          className="form-check-input" 
-          type="radio" 
-          id={`inlineCheckbox_right_${uniqueId}`}  
-          value="multi" 
-          onChange={onChangeQuestionType} 
-          checked={questionType === SELECT_TYPE.MULTI} 
-        />
-        <label className="form-check-label" htmlFor={`inlineCheckbox_right_${uniqueId}`}  >Many answers</label>
-      </div>
+      <Radio 
+        index={`left_${index}`}
+        namePath={namePath}
+        value={SELECT_TYPE.SINGLE}
+        label={'One answer'}
+      />
+      <Radio 
+        index={`right_${index}`}
+        namePath={namePath}
+        value={SELECT_TYPE.MULTI}
+        label={'Many answers'}
+      />
     </div>
   );
 }
 
-export default observer(QuestionSelectType);
+export default QuestionSelectType;

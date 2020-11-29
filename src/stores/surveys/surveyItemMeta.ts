@@ -23,10 +23,10 @@ const SurveyItemMeta = types.model({
     self.survey.createQuestion(question);
   }
 
-  const removeQuestion = (question: ISurveyQuestion) => {
-    question.options.map((option) => option && removeOption(option));
-    self.questionsList.remove(question);
-  }
+  // const removeQuestion = (question: ISurveyQuestion) => {
+  //   question.options.map((option) => option && removeOption(option));
+  //   self.questionsList.remove(question);
+  // }
 
   const createOption = (question: ISurveyQuestion) => {
     const option = SurveyOption.create({id: getUniqueDecrementInt()});
@@ -34,9 +34,9 @@ const SurveyItemMeta = types.model({
     question.createOption(option);
   }
 
-  const removeOption = (option: ISurveyOption) => {
-    self.optionsList.remove(option);
-  }
+  // const removeOption = (option: ISurveyOption) => {
+  //   self.optionsList.remove(option);
+  // }
 
   const save = flow(function*() {
     let snapshot = getSnapshot(self);
@@ -54,9 +54,9 @@ const SurveyItemMeta = types.model({
   return {
     afterCreate,
     createQuestion,
-    removeQuestion,
+    // removeQuestion,
     createOption,
-    removeOption,
+    // removeOption,
     save,
   }
 });
