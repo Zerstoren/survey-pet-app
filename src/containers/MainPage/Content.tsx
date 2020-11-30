@@ -14,7 +14,7 @@ const Content = ({
   useEffect(() => {
     surveyListStore.applySearchText(mainStore?.searchTextMainPage || '');
     surveyListStore.loadList();
-  }, [mainStore?.reloadIndex, mainStore?.searchTextMainPage]);
+  }, [mainStore?.reloadIndex, mainStore?.searchTextMainPage, surveyListStore]);
   
   return (
     <div className="content">

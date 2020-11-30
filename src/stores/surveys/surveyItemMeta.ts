@@ -2,7 +2,7 @@ import { flow, getSnapshot, Instance, types } from "mobx-state-tree";
 import { getUniqueDecrementInt } from "../../helpers/fns/math";
 import { saveMetaSurvey } from "../../storageEmulate/surveyList";
 import SurveyItem from "./surveyItem";
-import SurveyOption, { ISurveyOption } from "./surveyOption";
+import SurveyOption from "./surveyOption";
 import SurveyQuestion, { ISurveyQuestion } from "./surveyQuestion";
 
 const SurveyItemMeta = types.model({
@@ -24,10 +24,9 @@ const SurveyItemMeta = types.model({
 
   const save = flow(function*() {
     let snapshot = getSnapshot(self);
-    let generator;
 
     try {
-      generator = yield saveMetaSurvey(snapshot);
+      yield saveMetaSurvey(snapshot);
     } catch (e) {
       debugger;
     }

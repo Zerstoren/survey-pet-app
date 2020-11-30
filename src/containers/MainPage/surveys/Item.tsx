@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import React from 'react';
-import { Link as Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ISurveyItem } from '../../../stores/surveys/surveyItem';
 
 const SurveyItem = ({survey}: {survey: ISurveyItem}) => {

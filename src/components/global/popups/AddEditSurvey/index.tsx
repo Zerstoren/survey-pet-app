@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 import React from 'react';
 import { Field, Form } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
-import UiPopup from '../../../../components/uiBase/popup';
+import UiPopup from '../../../uiBase/popup';
 import createSurveyValidator from '../../../../helpers/validators/createSurveyValidator';
 import { IMainStore } from '../../../../stores/mainState';
 import SurveyItemMeta, { ISurveyItemMeta } from '../../../../stores/surveys/surveyItemMeta';

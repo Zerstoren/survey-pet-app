@@ -1,5 +1,4 @@
 import { ISurveyItem } from "../../stores/surveys/surveyItem";
-import { SELECT_TYPE } from "../../stores/surveys/surveyQuestion";
 
 interface FormValue {
   question?: string
@@ -14,7 +13,7 @@ const createSurveyValidator = (values: ISurveyItem) => {
     errors.question = 'Questions is required';
   }
 
-  values.questions.map((question, index) => {
+  values.questions.forEach((question, index) => {
     if (!question) {
       errors?.questions?.push({});
       return;
