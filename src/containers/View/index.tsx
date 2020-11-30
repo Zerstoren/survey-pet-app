@@ -1,27 +1,24 @@
+import { observer } from 'mobx-react';
 import React from 'react';
 import BreadCrumbs from '../../components/global/Header/BreadCrumbs';
 import NewSurveyButton from '../../components/global/Header/NewSurveyButton';
 import Search from '../../components/global/Header/Search';
-import AddNewSurvey from '../../components/global/popups/AddNewSurvey';
 import HocHeader from '../../components/hoc/header/header';
-import Content from './Content';
 
-const MainPage = () => {
+const View = () => {
   const hocHeader = HocHeader(
     <BreadCrumbs />,
     <>
       <Search />
       <NewSurveyButton />
     </>
-  )
+  );
   
   return (
     <>
-      <AddNewSurvey />
       {hocHeader()}
-      <Content />
     </>
   );
-};
+}
 
-export default MainPage;
+export default observer(View);

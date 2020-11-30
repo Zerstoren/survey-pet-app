@@ -20,7 +20,7 @@ const Radio = ({
       type="radio"
       value={value} 
     >
-      {({input, meta}) => (
+      {({input}) => (
         <input 
           {...input}
           className="form-check-input" 
