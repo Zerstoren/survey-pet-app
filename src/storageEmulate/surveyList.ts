@@ -92,6 +92,7 @@ const saveAnswers = async (answers: Array<IAnswer>) => {
 export type {
   ISaveSurvey
 };
+
 export {
   getItemsFromStorage,
   getSurvey,

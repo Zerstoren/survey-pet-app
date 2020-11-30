@@ -2,6 +2,7 @@ import { observer } from 'mobx-react';
 import React from 'react';
 import BreadCrumbs from '../../components/global/Header/BreadCrumbs';
 import HocHeader from '../../components/hoc/header';
+import Content from './Content';
 
 const View = () => {
   const hocHeader = HocHeader(
@@ -12,8 +13,9 @@ const View = () => {
   return (
     <>
       {hocHeader()}
+      <Content />
     </>
   );
 }
 
-export default observer(View);
+export default View;

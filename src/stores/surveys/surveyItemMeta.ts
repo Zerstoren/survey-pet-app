@@ -34,10 +34,15 @@ const SurveyItemMeta = types.model({
     return 1;
   });
 
+  const load = flow(function*() {
+    
+  });
+
   return {
     createQuestion,
     createAnswer,
     save,
+    load,
   }
 });
 
