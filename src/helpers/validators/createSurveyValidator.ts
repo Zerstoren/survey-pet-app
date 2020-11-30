@@ -3,7 +3,7 @@ import { ISurveyItem } from "../../stores/surveys/surveyItem";
 interface FormValue {
   question?: string
   questions?: Array<{
-    option?: string,
+    answer?: string,
   }>,
 }
 
@@ -23,15 +23,15 @@ const createSurveyValidator = (values: ISurveyItem) => {
       errors.questions = [];
     }
 
-    let optionsError: string = '';
+    let answersError: string = '';
 
-    if (!question.options || !question.options.length) {
-      optionsError = 'Answers is required';
+    if (!question.answers || !question.answers.length) {
+      answersError = 'Answers is required';
     }
 
-    if (optionsError) {
+    if (answersError) {
       errors.questions.push({
-        option: optionsError,
+        answer: answersError,
       });
     } else {
       errors.questions.push({});

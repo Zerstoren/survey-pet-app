@@ -2,13 +2,13 @@ import { flow, getSnapshot, Instance, types } from "mobx-state-tree";
 import { getUniqueDecrementInt } from "../../helpers/fns/math";
 import { saveMetaSurvey } from "../../storageEmulate/surveyList";
 import SurveyItem from "./surveyItem";
-import SurveyOption from "./surveyOption";
+import SurveyAnswer from "./surveyAnswer";
 import SurveyQuestion, { ISurveyQuestion } from "./surveyQuestion";
 
 const SurveyItemMeta = types.model({
   survey: types.optional(SurveyItem, {id: getUniqueDecrementInt()}),
   questionsList: types.array(SurveyQuestion),
-  optionsList: types.array(SurveyOption)
+  answersList: types.array(SurveyAnswer)
 }).actions(self => {
   const createQuestion = () => {
     const question = SurveyQuestion.create();
@@ -16,10 +16,10 @@ const SurveyItemMeta = types.model({
     self.survey.createQuestion(question);
   }
 
-  const createOption = (question: ISurveyQuestion) => {
-    const option = SurveyOption.create();
-    self.optionsList.push(option);
-    question.createOption(option);
+  const createAnswer = (question: ISurveyQuestion) => {
+    const answer = SurveyAnswer.create();
+    self.answersList.push(answer);
+    question.createAnswer(answer);
   }
 
   const save = flow(function*() {
@@ -36,7 +36,7 @@ const SurveyItemMeta = types.model({
 
   return {
     createQuestion,
-    createOption,
+    createAnswer,
     save,
   }
 });

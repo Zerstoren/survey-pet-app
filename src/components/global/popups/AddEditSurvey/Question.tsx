@@ -5,7 +5,7 @@ import Answer from './fields/AnswersText';
 import QuestionSelectType from './fields/QuestionSelectType';
 import QuestionTitle from './fields/QuestionTitle';
 
-const Options = ({
+const Question = ({
   questionIndex,
   namePath,
   onQuestionRemove,
@@ -28,17 +28,17 @@ const Options = ({
       <div className="form-group">
         <label>Answers: </label>
         
-        <Field name={`${namePath}.option`}>
+        <Field name={`${namePath}.answer`}>
           {({input, meta}) => meta.error ? (<div className="alert alert-danger">{meta.error}</div>) : null}
         </Field>
 
-        <FieldArray name={`${namePath}.options`}>
+        <FieldArray name={`${namePath}.answers`}>
           {({fields}) => fields.map((name, index) => (
             <Answer 
               key={index} 
               namePath={name} 
-              optionIndex={index}
-              optionRemove={() => fields.remove(index)}
+              answerIndex={index}
+              answerRemove={() => fields.remove(index)}
             />
           ))}
         </FieldArray>
@@ -48,7 +48,7 @@ const Options = ({
             type="button" 
             className="form-control form-control-sm btn btn-info" 
             value="+" 
-            onClick={() => push(`${namePath}.options`)}
+            onClick={() => push(`${namePath}.answers`)}
           />
         </div>
       </div>
@@ -58,4 +58,4 @@ const Options = ({
   )
 }
 
-export default Options;
+export default Question;

@@ -43,11 +43,11 @@ const saveStorageList = async <T>(storage: string, items: Array<T>) => {
   return localforage.setItem(storage, items);
 }
 
-const updateObjectBeforeInsert = async <T extends IRecord>(storage: string, option: T) : Promise<IMapReplaceIds> => {
+const updateObjectBeforeInsert = async <T extends IRecord>(storage: string, answer: T) : Promise<IMapReplaceIds> => {
   let id = await incrementId(storage);
-  let oldId = option.id
-  option.isNew = false;
-  option.id = id;
+  let oldId = answer.id
+  answer.isNew = false;
+  answer.id = id;
   return {[oldId]: id};
 }
 

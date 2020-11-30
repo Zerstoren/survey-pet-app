@@ -4,7 +4,7 @@ import { getBySelector, getOne, IGetSelectorFunction, insertMany, insertOne, IRe
 
 const LS_NAME_SURVEY = 'surveys';
 const LS_NAME_QUESTIONS = 'surveys_questions';
-const LS_NAME_OPTIONS = 'surveys_options';
+const LS_NAME_ANSWERS = 'surveys_answers';
 
 interface ISurvey extends IRecord {
   title: string,
@@ -14,16 +14,16 @@ interface ISurvey extends IRecord {
 interface IQuestion extends IRecord {
   questionTitle: string,
   questionType: SELECT_TYPE,
-  options: Array<number>
+  answers: Array<number>
 }
 
-interface IOption extends IRecord {
+interface IAnswer extends IRecord {
   text: string,
   position: boolean
 }
 
 interface ISaveSurvey {
-  optionsList: Array<IOption>,
+  answersList: Array<IAnswer>,
   questionsList: Array<IQuestion>,
   survey: ISurvey
 }
@@ -35,8 +35,8 @@ const getItemsFromStorage = async () => {
 const saveMetaSurvey = async (metaList: any) => {
   metaList = metaList as ISaveSurvey;
 
-  let optionsIds = await saveOptions(metaList.optionsList);
-  let questionsIds = await saveQuestions(metaList.questionsList, optionsIds);
+  let answersIds = await saveAnswers(metaList.answersList);
+  let questionsIds = await saveQuestions(metaList.questionsList, answersIds);
   let surveyIds = await saveSurvey(metaList.survey, questionsIds);
 
   return surveyIds;
@@ -68,24 +68,24 @@ const saveSurvey = (survey: ISurvey, questionsIds: IReplaceIds) => {
   );
 }
 
-const saveQuestions = (questions: Array<IQuestion>, optionsIds: IReplaceIds) => {
+const saveQuestions = (questions: Array<IQuestion>, answersIds: IReplaceIds) => {
   return insertMany<IQuestion>(
     LS_NAME_QUESTIONS,
     questions,
     [
       [
-        (question: IQuestion, ids: Array<number>) => {question.options = ids},
-        (question: IQuestion) => question.options,
-        optionsIds
+        (question: IQuestion, ids: Array<number>) => {question.answers = ids},
+        (question: IQuestion) => question.answers,
+        answersIds
       ]
     ]
   );
 }
 
-const saveOptions = async (options: Array<IOption>) => {
-  return insertMany<IOption>(
-    LS_NAME_OPTIONS,
-    options
+const saveAnswers = async (answers: Array<IAnswer>) => {
+  return insertMany<IAnswer>(
+    LS_NAME_ANSWERS,
+    answers
   );
 }
 

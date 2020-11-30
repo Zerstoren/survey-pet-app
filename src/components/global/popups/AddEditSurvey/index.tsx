@@ -7,7 +7,7 @@ import UiPopup from '../../../uiBase/popup';
 import createSurveyValidator from '../../../../helpers/validators/createSurveyValidator';
 import { IMainStore } from '../../../../stores/mainState';
 import SurveyItemMeta, { ISurveyItemMeta } from '../../../../stores/surveys/surveyItemMeta';
-import SurveyOption from '../../../../stores/surveys/surveyOption';
+import SurveyAnswer from '../../../../stores/surveys/surveyAnswer';
 import SurveyQuestion, { SELECT_TYPE } from '../../../../stores/surveys/surveyQuestion';
 import SurveyTitle from './fields/SurvetTitle';
 import Questions from './Question';
@@ -22,22 +22,22 @@ const AddPopup = ({
 }) => {
   const onSubmit = (values: any) => {
     // How to do this correct with types?
-    let options: Array<any> = [];
+    let answers: Array<any> = [];
     let questions: Array<any> = [];
     values.questions = values.questions.map((question: any) => {
-      question.options = question.options.map((option: any) => {
-        let opt = SurveyOption.create(option);
-        options.push(option);
-        return opt.id;
+      question.answers = question.answers.map((answer: any) => {
+        const answ = SurveyAnswer.create(answer);
+        answers.push(answer);
+        return answ.id;
       });
 
-      let ques = SurveyQuestion.create(question);
+      const ques = SurveyQuestion.create(question);
       questions.push(ques);
       return ques.id;
     });
     SurveyItemMeta.create({
       survey: values,
-      optionsList: options,
+      answersList: answers,
       questionsList: questions
     }).save();
     
@@ -48,7 +48,7 @@ const AddPopup = ({
   const initialQuestionValue = {
     title: '',
     questionType: SELECT_TYPE.SINGLE,
-    options: [{}, {}]
+    answers: [{}, {}]
   }
 
   return (

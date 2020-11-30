@@ -3,13 +3,13 @@ import { Field } from 'react-final-form';
 import { required } from '../../../../../helpers/validators/default';
 
 const Answer = ({
-  optionIndex,
+  answerIndex,
   namePath,
-  optionRemove,
+  answerRemove,
 }: {
-  optionIndex: number,
+  answerIndex: number,
   namePath: string,
-  optionRemove: Function
+  answerRemove: Function
 }) => {
   return (
     <Field
@@ -32,8 +32,8 @@ const Answer = ({
           <>
             <div className={classNameGroup}>
               <div className="input-group-prepend">
-                <div className="input-group-text">{optionIndex + 1}</div>
-                <button className="btn btn-warning" type="button" onClick={() => optionRemove()}> - </button>
+                <div className="input-group-text">{answerIndex + 1}</div>
+                <button className="btn btn-warning" type="button" onClick={() => answerRemove()}> - </button>
               </div>
                 <input {...input} className={classNameInput} />
             </div>

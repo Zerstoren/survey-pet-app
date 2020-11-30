@@ -1,6 +1,6 @@
 import { Instance, types } from "mobx-state-tree";
 import { getUniqueDecrementInt } from "../../helpers/fns/math";
-import SurveyOption, { ISurveyOption } from "./surveyOption";
+import SurveyAnswer, { ISurveyAnswer } from "./surveyAnswer";
 
 enum SELECT_TYPE {
   SINGLE = 'single',
@@ -12,14 +12,14 @@ const SurveyQuestion = types.model("SurveyQuestion", {
   isNew: types.optional(types.boolean, true),
   questionTitle: types.optional(types.string, ''),
   questionType: types.optional(types.enumeration<SELECT_TYPE>('SELECT_TYPE', [SELECT_TYPE.SINGLE, SELECT_TYPE.MULTI]), SELECT_TYPE.SINGLE),
-  options: types.array(types.safeReference(SurveyOption))
+  answers: types.array(types.safeReference(SurveyAnswer))
 }).actions(self => {
-  const createOption = (option: ISurveyOption) => {
-    self.options.push(option);
+  const createAnswer = (answer: ISurveyAnswer) => {
+    self.answers.push(answer);
   };
 
-  const removeOption = (option: ISurveyOption) => {
-    self.options.remove(option);
+  const removeAnswer = (answer: ISurveyAnswer) => {
+    self.answers.remove(answer);
   };
 
   const setQuestionTitle = (title: string) => {
@@ -31,8 +31,8 @@ const SurveyQuestion = types.model("SurveyQuestion", {
   };
 
   return {
-    createOption,
-    removeOption,
+    createAnswer,
+    removeAnswer,
     setQuestionTitle,
     setQuestionType,
   }
