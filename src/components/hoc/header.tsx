@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '../../global/Header';
+import Header from '../global/Header';
 
 const HocHeader = (leftSide: JSX.Element, rightSide: JSX.Element) => {
   return () => (
