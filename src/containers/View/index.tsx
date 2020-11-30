@@ -7,7 +7,7 @@ import HocHeader from '../../components/hoc/header/header';
 
 const View = () => {
   const hocHeader = HocHeader(
-    <BreadCrumbs />,
+    <BreadCrumbs items={[['', 'Show']]} />,
     <>
       <Search />
       <NewSurveyButton />

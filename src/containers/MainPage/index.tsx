@@ -8,7 +8,7 @@ import Content from './Content';
 
 const MainPage = () => {
   const hocHeader = HocHeader(
-    <BreadCrumbs />,
+    <BreadCrumbs items={[]} />,
     <>
       <Search />
       <NewSurveyButton />
