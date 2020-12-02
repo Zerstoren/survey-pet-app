@@ -3,17 +3,11 @@ import * as questionsSql from '../sqlStorage/questions';
 import * as surveysSql from '../sqlStorage/surveys';
 import { ISnapchotOutSurveyAnswer, ISnapchotOutSurveyItem, ISnapchotOutSurveyQuestion } from '../stores/surveys/types';
 
-const getItemsFromStorage = async () => {
-  return '';
-}
+const loadSurvey = async (filterText: string = '') => {
+  if (filterText) {
+    return await surveysSql.filterLoadList(filterText);
+  }
 
-const saveMetaSurvey = async (metaList: any) => {
-}
-
-const getSurvey = async (id: number) => {
-}
-
-const loadSurvey = async (filterText: string) => {
   return await surveysSql.load();
 }
 
@@ -53,17 +47,14 @@ const saveQuestions = (questions: Array<ISnapchotOutSurveyQuestion>) => {
 const saveAnswers = async (answers: Array<ISnapchotOutSurveyAnswer>) => {
   return answersSql.addMany(answers.map((answer) => ({
     id: answer.id,
-    position: 0,
     surveyId: answer.surveyId,
     questionId: answer.questionId,
+    position: answer.position,
     title: answer.title,
   })));
 }
 
 export {
-  getItemsFromStorage,
-  getSurvey,
   loadSurvey,
   saveSurvey,
-  saveMetaSurvey
 };

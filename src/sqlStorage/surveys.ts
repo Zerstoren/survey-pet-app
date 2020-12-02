@@ -1,7 +1,7 @@
-import { column, ColumnType, database, sqlite, Table } from 'websql-orm';
+import { column, ColumnType, database, EnvConfig, sqlite, Table } from 'websql-orm';
 import { ISnapchotInSurveyItem } from '../stores/surveys/types';
 
-// EnvConfig.enableDebugLog = true;
+EnvConfig.enableDebugLog = false;
 
 @database('survey_db', 'surveys')
 class Surveys extends Table {
@@ -46,7 +46,18 @@ const load = async () : Promise<Array<ISnapchotInSurveyItem>> => {
   return results.map((r) => r.getJson());
 }
 
+const filterLoadList = async (filter: string) : Promise<Array<ISnapchotInSurveyItem>> => {
+  let results = await sqlite.fromSql<Surveys>(
+    new Surveys(), 
+    "SELECT * FROM surveys WHERE title LIKE ?",
+    [`%${filter}%`]
+  );
+
+  return results.map(r => r.getJson());
+}
+
 export {
   add,
   load,
+  filterLoadList,
 };

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import SurveyItem from '../../storesActions/surveys';
+import SurveyItem from '../../stores/surveys/surveyItem';
 
 const Content = () => {
   const { id }: { id: string } = useParams();
