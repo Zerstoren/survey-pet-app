@@ -1,16 +1,15 @@
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import SurveyItemMeta from '../../stores/surveys/surveyItemMeta';
+import SurveyItem from '../../storesActions/surveys';
 
 const Content = () => {
   const { id }: { id: string } = useParams();
   
-  // const surveyItem = useMemo(() => {
-
-  //   const surveyItem = SurveyItemMeta.create({survey: {id: id}});
-  //   surveyItem.load();
-  //   return surveyItem.survey;
-  // }, [id]);
+  useMemo(() => {
+    const surveyItem = SurveyItem.create({id: id});
+    surveyItem.load();
+    return surveyItem;
+  }, [id]);
 
   return (
     <>

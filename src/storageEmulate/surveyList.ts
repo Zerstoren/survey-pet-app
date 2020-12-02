@@ -1,37 +1,7 @@
-import { SELECT_TYPE } from '../stores/surveys/surveyQuestion';
-import { IRecord } from './methods';
-import * as surveysSql from '../sqlStorage/surveys';
-import * as questionsSql from '../sqlStorage/questions';
 import * as answersSql from '../sqlStorage/answers';
-import { ISnapchotInSurveyItem, ISnapchotOutSurveyAnswer, ISnapchotOutSurveyItem, ISnapchotOutSurveyQuestion, ISurveyAnswer, ISurveyItem, ISurveyQuestion } from '../stores/surveys/types';
-
-interface ISurvey extends IRecord {
-  id: string,
-  title: string,
-  questions: Array<IQuestion>
-};
-
-interface IQuestion extends IRecord {
-  id: string,
-  surveyId: string,
-  title: string,
-  type: SELECT_TYPE,
-  answers: Array<IAnswer>
-}
-
-interface IAnswer extends IRecord {
-  id: string,
-  surveyId: string,
-  questionId: string,
-  title: string,
-  position: boolean
-}
-
-interface ISaveSurvey {
-  answersList: Array<IAnswer>,
-  questionsList: Array<IQuestion>,
-  survey: ISurvey
-}
+import * as questionsSql from '../sqlStorage/questions';
+import * as surveysSql from '../sqlStorage/surveys';
+import { ISnapchotOutSurveyAnswer, ISnapchotOutSurveyItem, ISnapchotOutSurveyQuestion } from '../stores/surveys/types';
 
 const getItemsFromStorage = async () => {
   return '';
@@ -44,6 +14,7 @@ const getSurvey = async (id: number) => {
 }
 
 const loadSurvey = async (filterText: string) => {
+  return await surveysSql.load();
 }
 
 const saveSurvey = async (survey: ISnapchotOutSurveyItem) => {
@@ -52,9 +23,21 @@ const saveSurvey = async (survey: ISnapchotOutSurveyItem) => {
     title: survey.title
   });
 
-  await saveQuestions(survey.questions);
+  await saveQuestions(survey.questions.map(q => {
+    q.surveyId = survey.id;
+    return q;
+  }));
+
   await saveAnswers(
-    survey.questions.map((q) => q.answers).flat()
+    survey.questions.map((q) => {
+      let index = 0;
+      return q.answers.map(a => {
+        a.position = index++;
+        a.surveyId = survey.id;
+        a.questionId = q.id;
+        return a;
+      })
+    }).flat()
   );
 }
 
@@ -77,9 +60,6 @@ const saveAnswers = async (answers: Array<ISnapchotOutSurveyAnswer>) => {
   })));
 }
 
-export type {
-  ISaveSurvey
-};
 export {
   getItemsFromStorage,
   getSurvey,

@@ -13,7 +13,7 @@ const Answer = ({
 }) => {
   return (
     <Field
-      name={`${namePath}.text`}
+      name={`${namePath}.title`}
       validate={required}
     >
       {({input, meta}) => {

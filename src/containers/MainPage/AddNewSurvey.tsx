@@ -1,12 +1,12 @@
 import { inject, observer } from 'mobx-react';
 import React, { useMemo } from 'react';
-import { IMainStore } from '../../stores/mainState';
-import SurveyItemMeta from '../../stores/surveys/surveyItemMeta';
 import AddPopup from '../../components/global/popups/AddEditSurvey';
+import { IMainStore } from '../../stores/mainState';
+import SurveyItem from '../../stores/surveys/surveyItem';
 
 const AddNewSurvey = ({mainStore} : {mainStore?: IMainStore}) => {
   let popupAdd: JSX.Element | null = useMemo(() : JSX.Element => {
-      let newSurveyMeta = SurveyItemMeta.create();
+      let newSurveyMeta = SurveyItem.create();
       return (<AddPopup itemMeta={newSurveyMeta} />)
     }, []
   );

@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react';
 import React from 'react';
 import BreadCrumbs from '../../components/global/Header/BreadCrumbs';
 import HocHeader from '../../components/hoc/header';

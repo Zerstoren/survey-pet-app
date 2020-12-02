@@ -1,14 +1,28 @@
-import { sqlite, database, column, ColumnType, Table, EnvConfig } from 'websql-orm';
+import { column, ColumnType, database, sqlite, Table } from 'websql-orm';
+import { ISnapchotInSurveyItem } from '../stores/surveys/types';
 
-EnvConfig.enableDebugLog = true;
+// EnvConfig.enableDebugLog = true;
 
 @database('survey_db', 'surveys')
 class Surveys extends Table {
   @column(ColumnType.PRIMARY | ColumnType.STRING)
-  id: string | undefined;
+  id: string;
   
   @column(ColumnType.STRING)
-  title: string | undefined;
+  title: string;
+
+  constructor(data?: Survey) {
+    super();
+    this.id = data ? data.id : '';
+    this.title = data ? data.title : '';
+  }
+
+  getJson() {
+    return {
+      id: this.id,
+      title: this.title
+    }
+  }
 }
 
 interface Survey {
@@ -17,9 +31,7 @@ interface Survey {
 }
 
 const _survey = (data: Survey) => {
-  const surveyRecord = new Surveys();
-  surveyRecord.title = data.title;
-  surveyRecord.id = data.id;
+  const surveyRecord = new Surveys(data);
   return surveyRecord;
 }
 
@@ -29,6 +41,12 @@ const add = async (data: Survey) => {
   return [data.id];
 }
 
+const load = async () : Promise<Array<ISnapchotInSurveyItem>> => {
+  let results = await sqlite.query<Surveys>(new Surveys(), {} );
+  return results.map((r) => r.getJson());
+}
+
 export {
   add,
-}
+  load,
+};

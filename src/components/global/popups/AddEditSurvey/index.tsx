@@ -3,16 +3,14 @@ import { inject, observer } from 'mobx-react';
 import React from 'react';
 import { Field, Form } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
-import UiPopup from '../../../uiBase/popup';
 import createSurveyValidator from '../../../../helpers/validators/createSurveyValidator';
 import { IMainStore } from '../../../../stores/mainState';
-import SurveyItemMeta, { ISurveyItemMeta } from '../../../../stores/surveys/surveyItemMeta';
-import SurveyAnswer from '../../../../stores/surveys/surveyAnswer';
-import SurveyQuestion, { SELECT_TYPE } from '../../../../stores/surveys/surveyQuestion';
+import { SELECT_TYPE } from '../../../../stores/surveys/surveyQuestion';
+import { ISurveyItem } from '../../../../stores/surveys/types';
+import SurveyItem from '../../../../storesActions/surveys';
+import UiPopup from '../../../uiBase/popup';
 import SurveyTitle from './fields/SurvetTitle';
 import Questions from './Question';
-import SurveyItem from '../../../../storesActions/surveys';
-// import SurveyItem from '../../../../stores/surveys/surveyItem';
 
 
 const AddPopup = ({
@@ -20,7 +18,7 @@ const AddPopup = ({
   itemMeta,
 }: {
   mainStore?: IMainStore,
-  itemMeta: ISurveyItemMeta
+  itemMeta: ISurveyItem
 }) => {
   const onSubmit = (values: any) => {
     SurveyItem.create(values).save();
@@ -31,7 +29,7 @@ const AddPopup = ({
 
   const initialQuestionValue = {
     title: '',
-    questionType: SELECT_TYPE.SINGLE,
+    type: SELECT_TYPE.SINGLE,
     answers: [{}, {}]
   }
 

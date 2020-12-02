@@ -3,16 +3,33 @@ import { sqlite, database, column, ColumnType, Table } from 'websql-orm';
 @database('survey_db', 'questions')
 class Questions extends Table {
   @column(ColumnType.PRIMARY | ColumnType.STRING)
-  id: string | undefined;
+  id: string;
 
   @column(ColumnType.STRING)
-  surveyId: string | undefined;
+  surveyId: string;
 
   @column(ColumnType.STRING)
-  title: string | undefined
+  title: string
 
   @column(ColumnType.STRING)
-  type: string | undefined
+  type: string
+
+  constructor(data?: Question) {
+    super();
+    this.id = data ? data.id : '';
+    this.surveyId = data ? data.surveyId : '';
+    this.title = data ? data.title : '';
+    this.type = data ? data.type : '';
+  }
+
+  getJson() : Question {
+    return {
+      id: this.id,
+      surveyId: this.surveyId,
+      title: this.title,
+      type: this.type
+    }
+  }
 }
 
 interface Question {
@@ -22,24 +39,14 @@ interface Question {
   type: string,
 }
 
-const _question = (data: Question) => {
-  const questionRecord = new Questions();
-  questionRecord.title = data.title;
-  questionRecord.type = data.type;
-  questionRecord.surveyId = data.surveyId;
-  questionRecord.id = data.id;
-  return questionRecord;
-}
-
 const add = async (data: Question) => {
-  const questionRecord = _question(data);
+  const questionRecord = new Questions(data);
   await sqlite.insert<Questions>(questionRecord);
   return [data.id];
 } 
 
 const addMany = async (data: Array<Question>) => {
-  const records = data.map(_question);
-  await sqlite.insert<Questions>(records);
+  await sqlite.insert<Questions>(data.map(q => new Questions(q)));
   return data.map((q) => q.id);
 }
 
