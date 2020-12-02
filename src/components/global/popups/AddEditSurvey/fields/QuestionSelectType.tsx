@@ -15,7 +15,7 @@ const Radio = ({
 }) => (
   <div className="form-check form-check-inline">
     <Field 
-      name={`${namePath}.questionType`}
+      name={`${namePath}.type`}
       component="input"
       type="radio"
       value={value} 

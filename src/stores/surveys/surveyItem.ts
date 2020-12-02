@@ -1,41 +1,31 @@
-import { getSnapshot, Instance, types } from "mobx-state-tree";
-import { getUniqueDecrementInt } from "../../helpers/fns/math";
-import SurveyQuestion, { ISurveyQuestion } from "./surveyQuestion";
+import { flow, getSnapshot, types } from "mobx-state-tree";
+import { v4 } from 'uuid';
+import { saveSurvey } from "../../storageEmulate/surveyList";
+import SurveyQuestion from "./surveyQuestion";
 
 const SurveyItem = types.model("Survey", {
-  id: types.optional(types.identifierNumber, () => getUniqueDecrementInt()),
+  id: types.optional(types.identifier, () => v4()),
   isNew: types.optional(types.boolean, true),
   title: types.optional(types.string, ''),
-  questions: types.array(types.safeReference(SurveyQuestion)),
+  questions: types.array(SurveyQuestion),
 }).actions(self => {
-  const setTitle = (title: string) => {
-    self.title = title;
-  }
+  const save = flow(function*() : Generator<Promise<void>> {
+    try {
+      let snapshot = getSnapshot(self);
+      yield saveSurvey(snapshot);
+    } catch (e) {
+      debugger;
+    }
+  });
 
-  const createQuestion = (question: ISurveyQuestion) => {
-    self.questions.push(question);
-  }
-  
-  const removeQuestion = (question: ISurveyQuestion) => {
-    self.questions.remove(question);
-  }
-
-  const save = () => {
-    console.log(getSnapshot(self));
-  }
+  const load = flow(function*() {
+    
+  });
 
   return {
-    setTitle,
-    createQuestion,
-    removeQuestion,
     save,
+    load,
   };
 });
-
-type ISurveyItem = Instance<typeof SurveyItem>
-
-export type {
-  ISurveyItem
-};
 
 export default SurveyItem;

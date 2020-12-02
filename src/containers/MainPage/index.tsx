@@ -3,7 +3,7 @@ import BreadCrumbs from '../../components/global/Header/BreadCrumbs';
 import NewSurveyButton from '../../components/global/Header/NewSurveyButton';
 import Search from '../../components/global/Header/Search';
 import AddNewSurvey from './AddNewSurvey';
-import HocHeader from '../../components/hoc/header/header';
+import HocHeader from '../../components/hoc/header';
 import Content from './Content';
 
 const MainPage = () => {

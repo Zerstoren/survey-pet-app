@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import React from 'react';
-import { ISurveyListStore } from '../../../stores/surveys/surveyList';
+import { ISurveyListStore } from '../../../stores/surveys/types';
 import SurveyItem from './Item';
 
 const SurveyList = ({surveyListStore}: {surveyListStore: ISurveyListStore}) => {

@@ -1,4 +1,4 @@
-import { ISurveyItem } from "../../stores/surveys/surveyItem";
+import { ISurveyItem } from "../../stores/surveys/types";
 
 interface FormValue {
   question?: string

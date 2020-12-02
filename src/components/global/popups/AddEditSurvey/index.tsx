@@ -3,12 +3,12 @@ import { inject, observer } from 'mobx-react';
 import React from 'react';
 import { Field, Form } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
-import UiPopup from '../../../uiBase/popup';
 import createSurveyValidator from '../../../../helpers/validators/createSurveyValidator';
 import { IMainStore } from '../../../../stores/mainState';
-import SurveyItemMeta, { ISurveyItemMeta } from '../../../../stores/surveys/surveyItemMeta';
-import SurveyAnswer from '../../../../stores/surveys/surveyAnswer';
-import SurveyQuestion, { SELECT_TYPE } from '../../../../stores/surveys/surveyQuestion';
+import SurveyItem from '../../../../stores/surveys/surveyItem';
+import { SELECT_TYPE } from '../../../../stores/surveys/surveyQuestion';
+import { ISurveyItem } from '../../../../stores/surveys/types';
+import UiPopup from '../../../uiBase/popup';
 import SurveyTitle from './fields/SurvetTitle';
 import Questions from './Question';
 
@@ -18,28 +18,10 @@ const AddPopup = ({
   itemMeta,
 }: {
   mainStore?: IMainStore,
-  itemMeta: ISurveyItemMeta
+  itemMeta: ISurveyItem
 }) => {
   const onSubmit = (values: any) => {
-    // How to do this correct with types?
-    let answers: Array<any> = [];
-    let questions: Array<any> = [];
-    values.questions = values.questions.map((question: any) => {
-      question.answers = question.answers.map((answer: any) => {
-        const answ = SurveyAnswer.create(answer);
-        answers.push(answer);
-        return answ.id;
-      });
-
-      const ques = SurveyQuestion.create(question);
-      questions.push(ques);
-      return ques.id;
-    });
-    SurveyItemMeta.create({
-      survey: values,
-      answersList: answers,
-      questionsList: questions
-    }).save();
+    SurveyItem.create(values).save();
     
     mainStore?.reloadListOnMainPage();
     mainStore?.setIsShowAddSurveyPopup(false);
@@ -47,7 +29,7 @@ const AddPopup = ({
 
   const initialQuestionValue = {
     title: '',
-    questionType: SELECT_TYPE.SINGLE,
+    type: SELECT_TYPE.SINGLE,
     answers: [{}, {}]
   }
 

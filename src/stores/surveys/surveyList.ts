@@ -1,4 +1,4 @@
-import { flow, Instance, types } from "mobx-state-tree";
+import { flow, types } from "mobx-state-tree";
 import { loadSurvey } from "../../storageEmulate/surveyList";
 import SurveyItem from "./surveyItem";
 
@@ -10,8 +10,7 @@ const SurveyListStore = types.model({
   get count() {
     return self.surveys.length;
   }
-}))
-.actions(self => {
+})).actions(self => {
   const loadList = flow(function*() {
     const result = yield loadSurvey(self.filterSearchText);
     self.surveys.replace(result);
@@ -26,11 +25,5 @@ const SurveyListStore = types.model({
     applySearchText
   };
 });
-
-type ISurveyListStore = Instance<typeof SurveyListStore>;
-
-export type {
-  ISurveyListStore
-}
 
 export default SurveyListStore;

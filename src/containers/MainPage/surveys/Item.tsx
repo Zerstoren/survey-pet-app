@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ISurveyItem } from '../../../stores/surveys/surveyItem';
+import { ISurveyItem } from '../../../stores/surveys/types';
 
 const SurveyItem = ({survey}: {survey: ISurveyItem}) => {
   return (
