@@ -1,7 +1,7 @@
 import * as answersSql from '../sqlStorage/answers';
 import * as questionsSql from '../sqlStorage/questions';
 import * as surveysSql from '../sqlStorage/surveys';
-import { ISnapchotOutSurveyAnswer, ISnapchotOutSurveyItem, ISnapchotOutSurveyQuestion } from '../stores/surveys/types';
+import { ISnapshotOutSurveyAnswer, ISnapshotOutSurveyItem, ISnapshotOutSurveyQuestion } from '../stores/surveys/types';
 
 const loadSurvey = async (filterText: string = '') => {
   if (filterText) {
@@ -11,7 +11,27 @@ const loadSurvey = async (filterText: string = '') => {
   return await surveysSql.load();
 }
 
-const saveSurvey = async (survey: ISnapchotOutSurveyItem) => {
+const getSurvey = async (id: string) => {
+  let survey = await surveysSql.getItem(id);
+  let questions = await questionsSql.getItems(id);
+  let answers = await answersSql.getItems(id);
+
+  questions = questions.map((q) => {
+    return {
+      ...q,
+      answers: answers.filter((a) => a.questionId === q.id)
+    };
+  })
+
+  let snapshot = {
+    ...survey,
+    questions: questions
+  };
+
+  return snapshot;
+}
+
+const saveSurvey = async (survey: ISnapshotOutSurveyItem) => {
   await surveysSql.add({
     id: survey.id,
     title: survey.title
@@ -35,7 +55,7 @@ const saveSurvey = async (survey: ISnapchotOutSurveyItem) => {
   );
 }
 
-const saveQuestions = (questions: Array<ISnapchotOutSurveyQuestion>) => {
+const saveQuestions = (questions: Array<ISnapshotOutSurveyQuestion>) => {
   return questionsSql.addMany(questions.map((question) => ({
     id: question.id,
     surveyId: question.surveyId,
@@ -44,7 +64,7 @@ const saveQuestions = (questions: Array<ISnapchotOutSurveyQuestion>) => {
   })));
 }
 
-const saveAnswers = async (answers: Array<ISnapchotOutSurveyAnswer>) => {
+const saveAnswers = async (answers: Array<ISnapshotOutSurveyAnswer>) => {
   return answersSql.addMany(answers.map((answer) => ({
     id: answer.id,
     surveyId: answer.surveyId,
@@ -57,4 +77,5 @@ const saveAnswers = async (answers: Array<ISnapchotOutSurveyAnswer>) => {
 export {
   loadSurvey,
   saveSurvey,
+  getSurvey,
 };

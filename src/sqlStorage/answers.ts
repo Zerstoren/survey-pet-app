@@ -1,4 +1,5 @@
 import { sqlite, database, column, ColumnType, Table } from 'websql-orm';
+import { ISnapshotInSurveyAnswer } from '../stores/surveys/types';
  
 @database('survey_db', 'answers')
 class Answers extends Table {
@@ -17,16 +18,16 @@ class Answers extends Table {
   @column(ColumnType.STRING)
   title: string
   
-  constructor(data?: Answer) {
+  constructor(data?: ISnapshotInSurveyAnswer) {
     super();
-    this.id = data ? data.id : '';
-    this.surveyId = data ? data.surveyId : '';
-    this.questionId = data ? data.questionId : '';
-    this.title = data ? data.title : '';
-    this.position = data ? data.position : 0;
+    this.id = data?.id ? data.id : '';
+    this.surveyId = data?.surveyId ? data.surveyId : '';
+    this.questionId = data?.questionId ? data.questionId : '';
+    this.title = data?.title ? data.title : '';
+    this.position = data?.position ? data.position : 0;
   }
 
-  getJson() : Answer {
+  getJson() : ISnapshotInSurveyAnswer {
     return {
       id: this.id,
       surveyId: this.surveyId,
@@ -37,25 +38,23 @@ class Answers extends Table {
   }
 }
 
-interface Answer {
-  id: string,
-  surveyId: string,
-  questionId: string,
-  title: string,
-  position: number,
-}
-
-const add = async (data: Answer) => {
+const add = async (data: ISnapshotInSurveyAnswer) => {
   await sqlite.insert<Answers>(new Answers(data));
   return data.id;
 } 
 
-const addMany = async (data: Array<Answer>) => {
+const addMany = async (data: Array<ISnapshotInSurveyAnswer>) => {
   await sqlite.insert<Answers>(data.map(a => new Answers(a)));
   return data.map((a) => a.id);
 }
 
+const getItems = async (surveyId: string) => {
+  const results = await sqlite.query(new Answers(), {'surveyId': surveyId});
+  return results.map((q) => q.getJson());
+}
+
 export {
   add,
-  addMany
+  addMany,
+  getItems,
 }

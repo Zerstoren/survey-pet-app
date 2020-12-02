@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react';
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import SurveyItem from '../../stores/surveys/surveyItem';
@@ -5,7 +6,7 @@ import SurveyItem from '../../stores/surveys/surveyItem';
 const Content = () => {
   const { id }: { id: string } = useParams();
   
-  useMemo(() => {
+  const surveyItem = useMemo(() => {
     const surveyItem = SurveyItem.create({id: id});
     surveyItem.load();
     return surveyItem;
@@ -16,7 +17,7 @@ const Content = () => {
       <div className="d-flex justify-content-center view-outside">
         <div className="view-block">
           <div className="view-title">
-            <h2>Опрос о качестве обслуживания персоналом в кругах ада с первого по девятый</h2>
+            <h2>{surveyItem.title}</h2>
           </div>
 
           <div className="view-question-block">
@@ -50,4 +51,4 @@ const Content = () => {
   );
 }
 
-export default Content;
+export default observer(Content);

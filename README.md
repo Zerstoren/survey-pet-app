@@ -1,1 +1,1 @@
-Pet project. Storage - is browser localStorage
+Pet project. Storage - is browser web sql

@@ -1,7 +1,8 @@
-import { flow, getSnapshot, types } from "mobx-state-tree";
+import { applySnapshot, flow, getSnapshot, types } from "mobx-state-tree";
 import { v4 } from 'uuid';
-import { saveSurvey } from "../../storageEmulate/surveyList";
+import { getSurvey, saveSurvey } from "../../storageEmulate/surveyList";
 import SurveyQuestion from "./surveyQuestion";
+import { ISnapshotInSurveyItem } from "./types";
 
 const SurveyItem = types.model("Survey", {
   id: types.optional(types.identifier, () => v4()),
@@ -18,8 +19,11 @@ const SurveyItem = types.model("Survey", {
     }
   });
 
-  const load = flow(function*() {
-    
+  const load = flow(function*() : Generator<Promise<ISnapshotInSurveyItem>> {
+    applySnapshot(
+      self, 
+      (yield getSurvey(self.id))
+    );
   });
 
   return {

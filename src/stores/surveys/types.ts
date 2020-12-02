@@ -9,16 +9,14 @@ interface ISurveyQuestion extends Instance<typeof SurveyQuestion> {}
 interface ISurveyAnswer extends Instance<typeof SurveyAnswer> {}
 interface ISurveyListStore extends Instance<typeof SurveyListStore> {}
 
-interface II extends SnapshotOut<typeof SurveyListStore> {}
-
-interface ISnapchotInSurveyItem extends SnapshotIn<typeof SurveyItem> {}
-interface ISnapchotOutSurveyItem extends SnapshotOut<typeof SurveyItem> {}
+interface ISnapshotInSurveyItem extends SnapshotIn<typeof SurveyItem> {}
+interface ISnapshotOutSurveyItem extends SnapshotOut<typeof SurveyItem> {}
  
-interface ISnapchotInSurveyQuestion extends SnapshotIn<typeof SurveyQuestion> {}
-interface ISnapchotOutSurveyQuestion extends SnapshotOut<typeof SurveyQuestion> {}
+interface ISnapshotInSurveyQuestion extends SnapshotIn<typeof SurveyQuestion> {}
+interface ISnapshotOutSurveyQuestion extends SnapshotOut<typeof SurveyQuestion> {}
  
-interface ISnapchotInSurveyAnswer extends SnapshotIn<typeof SurveyAnswer> {}
-interface ISnapchotOutSurveyAnswer extends SnapshotOut<typeof SurveyAnswer> {}
+interface ISnapshotInSurveyAnswer extends SnapshotIn<typeof SurveyAnswer> {}
+interface ISnapshotOutSurveyAnswer extends SnapshotOut<typeof SurveyAnswer> {}
  
 export type {
   ISurveyItem,
@@ -26,12 +24,12 @@ export type {
   ISurveyAnswer,
   ISurveyListStore,
 
-  ISnapchotInSurveyItem,
-  ISnapchotOutSurveyItem,
+  ISnapshotInSurveyItem as ISnapshotInSurveyItem,
+  ISnapshotOutSurveyItem as ISnapshotOutSurveyItem,
 
-  ISnapchotInSurveyQuestion,
-  ISnapchotOutSurveyQuestion,
+  ISnapshotInSurveyQuestion as ISnapshotInSurveyQuestion,
+  ISnapshotOutSurveyQuestion as ISnapshotOutSurveyQuestion,
 
-  ISnapchotInSurveyAnswer,
-  ISnapchotOutSurveyAnswer,
+  ISnapshotInSurveyAnswer as ISnapshotInSurveyAnswer,
+  ISnapshotOutSurveyAnswer as ISnapshotOutSurveyAnswer,
 };

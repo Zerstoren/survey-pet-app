@@ -1,5 +1,5 @@
 import { column, ColumnType, database, EnvConfig, sqlite, Table } from 'websql-orm';
-import { ISnapchotInSurveyItem } from '../stores/surveys/types';
+import { ISnapshotInSurveyItem } from '../stores/surveys/types';
 
 EnvConfig.enableDebugLog = false;
 
@@ -11,13 +11,13 @@ class Surveys extends Table {
   @column(ColumnType.STRING)
   title: string;
 
-  constructor(data?: Survey) {
+  constructor(data?: ISnapshotInSurveyItem) {
     super();
-    this.id = data ? data.id : '';
-    this.title = data ? data.title : '';
+    this.id = data?.id ? data.id : '';
+    this.title = data?.title ? data.title : '';
   }
 
-  getJson() {
+  getJson() : ISnapshotInSurveyItem {
     return {
       id: this.id,
       title: this.title
@@ -25,28 +25,18 @@ class Surveys extends Table {
   }
 }
 
-interface Survey {
-  id: string,
-  title: string,
-}
-
-const _survey = (data: Survey) => {
+const add = async (data: ISnapshotInSurveyItem) => {
   const surveyRecord = new Surveys(data);
-  return surveyRecord;
-}
-
-const add = async (data: Survey) => {
-  const surveyRecord = _survey(data);
   await sqlite.insert<Surveys>(surveyRecord);
   return [data.id];
 }
 
-const load = async () : Promise<Array<ISnapchotInSurveyItem>> => {
+const load = async () : Promise<Array<ISnapshotInSurveyItem>> => {
   let results = await sqlite.query<Surveys>(new Surveys(), {} );
   return results.map((r) => r.getJson());
 }
 
-const filterLoadList = async (filter: string) : Promise<Array<ISnapchotInSurveyItem>> => {
+const filterLoadList = async (filter: string) : Promise<Array<ISnapshotInSurveyItem>> => {
   let results = await sqlite.fromSql<Surveys>(
     new Surveys(), 
     "SELECT * FROM surveys WHERE title LIKE ?",
@@ -56,8 +46,14 @@ const filterLoadList = async (filter: string) : Promise<Array<ISnapchotInSurveyI
   return results.map(r => r.getJson());
 }
 
+const getItem = async (id: string) : Promise<ISnapshotInSurveyItem> => {
+  let results = await sqlite.queryFirst<Surveys>(new Surveys(), {"id": id});
+  return results.getJson();
+}
+
 export {
   add,
   load,
   filterLoadList,
+  getItem,
 };
