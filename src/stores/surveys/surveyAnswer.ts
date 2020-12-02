@@ -1,21 +1,17 @@
-import { Instance, types } from "mobx-state-tree";
-import { getUniqueDecrementInt } from "../../helpers/fns/math";
+import { types } from "mobx-state-tree";
+import { NIL, v4 } from "uuid";
 
 const SurveyAnswer = types.model("SurvetAnswer", {
-  id: types.optional(types.identifierNumber, () => getUniqueDecrementInt()),
+  id: types.optional(types.identifier, () => v4()),
+  questionId: types.optional(types.string, NIL),
+  surveyId: types.optional(types.string, NIL),
   isNew: types.optional(types.boolean, true),
-  text: types.optional(types.string, ''),
+  title: types.optional(types.string, ''),
   position: types.optional(types.number, 0)
 }).actions(self => ({
-  setText(text: string) {
-    self.text = text;
+  setTitle(title: string) {
+    self.title = title;
   }
 }));
-
-type ISurveyAnswer = Instance<typeof SurveyAnswer>;
-
-export type {
-  ISurveyAnswer
-};
 
 export default SurveyAnswer;

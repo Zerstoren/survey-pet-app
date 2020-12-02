@@ -1,6 +1,6 @@
-import { Instance, types } from "mobx-state-tree";
-import { getUniqueDecrementInt } from "../../helpers/fns/math";
-import SurveyAnswer, { ISurveyAnswer } from "./surveyAnswer";
+import { types } from "mobx-state-tree";
+import { v4, NIL } from "uuid";
+import SurveyAnswer from "./surveyAnswer";
 
 enum SELECT_TYPE {
   SINGLE = 'single',
@@ -8,44 +8,29 @@ enum SELECT_TYPE {
 }
 
 const SurveyQuestion = types.model("SurveyQuestion", {
-  id: types.optional(types.identifierNumber, () => getUniqueDecrementInt()),
+  id: types.optional(types.identifier, () => v4()),
+  surveyId: types.optional(types.string, NIL),
   isNew: types.optional(types.boolean, true),
-  questionTitle: types.optional(types.string, ''),
-  questionType: types.optional(types.enumeration<SELECT_TYPE>('SELECT_TYPE', [SELECT_TYPE.SINGLE, SELECT_TYPE.MULTI]), SELECT_TYPE.SINGLE),
-  answers: types.array(types.safeReference(SurveyAnswer))
+  title: types.optional(types.string, ''),
+  type: types.optional(types.enumeration<SELECT_TYPE>('SELECT_TYPE', [SELECT_TYPE.SINGLE, SELECT_TYPE.MULTI]), SELECT_TYPE.SINGLE),
+  answers: types.array(SurveyAnswer)
 }).actions(self => {
-  const createAnswer = (answer: ISurveyAnswer) => {
-    self.answers.push(answer);
+  const setTitle = (title: string) => {
+    self.title = title;
   };
 
-  const removeAnswer = (answer: ISurveyAnswer) => {
-    self.answers.remove(answer);
-  };
-
-  const setQuestionTitle = (title: string) => {
-    self.questionTitle = title;
-  };
-
-  const setQuestionType = (type: SELECT_TYPE) => {
-    self.questionType = type;
+  const setType = (type: SELECT_TYPE) => {
+    self.type = type;
   };
 
   return {
-    createAnswer,
-    removeAnswer,
-    setQuestionTitle,
-    setQuestionType,
+    setTitle,
+    setType,
   }
 });
 
-type ISurveyQuestion = Instance<typeof SurveyQuestion>;
-
-export type {
-  ISurveyQuestion
-};
 export {
   SELECT_TYPE
 };
-
 
 export default SurveyQuestion;

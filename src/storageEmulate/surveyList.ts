@@ -1,24 +1,29 @@
-import { ISurveyItem } from '../stores/surveys/surveyItem';
 import { SELECT_TYPE } from '../stores/surveys/surveyQuestion';
-import { getBySelector, getOne, IGetSelectorFunction, insertMany, insertOne, IRecord, IReplaceIds } from './methods';
-
-const LS_NAME_SURVEY = 'surveys';
-const LS_NAME_QUESTIONS = 'surveys_questions';
-const LS_NAME_ANSWERS = 'surveys_answers';
+import { IRecord } from './methods';
+import * as surveysSql from '../sqlStorage/surveys';
+import * as questionsSql from '../sqlStorage/questions';
+import * as answersSql from '../sqlStorage/answers';
+import { ISnapchotInSurveyItem, ISnapchotOutSurveyAnswer, ISnapchotOutSurveyItem, ISnapchotOutSurveyQuestion, ISurveyAnswer, ISurveyItem, ISurveyQuestion } from '../stores/surveys/types';
 
 interface ISurvey extends IRecord {
+  id: string,
   title: string,
-  questions: Array<number>
+  questions: Array<IQuestion>
 };
 
 interface IQuestion extends IRecord {
-  questionTitle: string,
-  questionType: SELECT_TYPE,
-  answers: Array<number>
+  id: string,
+  surveyId: string,
+  title: string,
+  type: SELECT_TYPE,
+  answers: Array<IAnswer>
 }
 
 interface IAnswer extends IRecord {
-  text: string,
+  id: string,
+  surveyId: string,
+  questionId: string,
+  title: string,
   position: boolean
 }
 
@@ -33,70 +38,52 @@ const getItemsFromStorage = async () => {
 }
 
 const saveMetaSurvey = async (metaList: any) => {
-  metaList = metaList as ISaveSurvey;
-
-  let answersIds = await saveAnswers(metaList.answersList);
-  let questionsIds = await saveQuestions(metaList.questionsList, answersIds);
-  let surveyIds = await saveSurvey(metaList.survey, questionsIds);
-
-  return surveyIds;
 }
 
 const getSurvey = async (id: number) => {
-  return await getOne<ISurvey>(LS_NAME_SURVEY, id);
 }
 
 const loadSurvey = async (filterText: string) => {
-  let filter: IGetSelectorFunction<ISurvey> = filterText ?
-    (item: ISurvey) => item.title.includes(filterText) :
-    (item: ISurvey) => true;
-
-  return await getBySelector<ISurvey>(LS_NAME_SURVEY, filter);
 }
 
-const saveSurvey = (survey: ISurvey, questionsIds: IReplaceIds) => {
-  return insertOne<ISurvey>(
-    LS_NAME_SURVEY,
-    survey,
-    [
-      [
-        (survey: ISurvey, ids: Array<number>) => {survey.questions = ids},
-        (survey: ISurvey) => survey.questions,
-        questionsIds
-      ]
-    ]
+const saveSurvey = async (survey: ISnapchotOutSurveyItem) => {
+  await surveysSql.add({
+    id: survey.id,
+    title: survey.title
+  });
+
+  await saveQuestions(survey.questions);
+  await saveAnswers(
+    survey.questions.map((q) => q.answers).flat()
   );
 }
 
-const saveQuestions = (questions: Array<IQuestion>, answersIds: IReplaceIds) => {
-  return insertMany<IQuestion>(
-    LS_NAME_QUESTIONS,
-    questions,
-    [
-      [
-        (question: IQuestion, ids: Array<number>) => {question.answers = ids},
-        (question: IQuestion) => question.answers,
-        answersIds
-      ]
-    ]
-  );
+const saveQuestions = (questions: Array<ISnapchotOutSurveyQuestion>) => {
+  return questionsSql.addMany(questions.map((question) => ({
+    id: question.id,
+    surveyId: question.surveyId,
+    title: question.title,
+    type: question.type
+  })));
 }
 
-const saveAnswers = async (answers: Array<IAnswer>) => {
-  return insertMany<IAnswer>(
-    LS_NAME_ANSWERS,
-    answers
-  );
+const saveAnswers = async (answers: Array<ISnapchotOutSurveyAnswer>) => {
+  return answersSql.addMany(answers.map((answer) => ({
+    id: answer.id,
+    position: 0,
+    surveyId: answer.surveyId,
+    questionId: answer.questionId,
+    title: answer.title,
+  })));
 }
 
 export type {
   ISaveSurvey
 };
-
 export {
   getItemsFromStorage,
   getSurvey,
   loadSurvey,
+  saveSurvey,
   saveMetaSurvey
 };
-

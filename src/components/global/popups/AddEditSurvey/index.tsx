@@ -11,6 +11,8 @@ import SurveyAnswer from '../../../../stores/surveys/surveyAnswer';
 import SurveyQuestion, { SELECT_TYPE } from '../../../../stores/surveys/surveyQuestion';
 import SurveyTitle from './fields/SurvetTitle';
 import Questions from './Question';
+import SurveyItem from '../../../../storesActions/surveys';
+// import SurveyItem from '../../../../stores/surveys/surveyItem';
 
 
 const AddPopup = ({
@@ -21,25 +23,7 @@ const AddPopup = ({
   itemMeta: ISurveyItemMeta
 }) => {
   const onSubmit = (values: any) => {
-    // How to do this correct with types?
-    let answers: Array<any> = [];
-    let questions: Array<any> = [];
-    values.questions = values.questions.map((question: any) => {
-      question.answers = question.answers.map((answer: any) => {
-        const answ = SurveyAnswer.create(answer);
-        answers.push(answer);
-        return answ.id;
-      });
-
-      const ques = SurveyQuestion.create(question);
-      questions.push(ques);
-      return ques.id;
-    });
-    SurveyItemMeta.create({
-      survey: values,
-      answersList: answers,
-      questionsList: questions
-    }).save();
+    SurveyItem.create(values).save();
     
     mainStore?.reloadListOnMainPage();
     mainStore?.setIsShowAddSurveyPopup(false);

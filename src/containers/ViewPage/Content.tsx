@@ -5,13 +5,12 @@ import SurveyItemMeta from '../../stores/surveys/surveyItemMeta';
 const Content = () => {
   const { id }: { id: string } = useParams();
   
-  const surveyItem = useMemo(() => {
-    const surveyId = Number.parseInt(id);
+  // const surveyItem = useMemo(() => {
 
-    const surveyItem = SurveyItemMeta.create({survey: {id: surveyId}});
-    surveyItem.load();
-    return surveyItem.survey;
-  }, [id]);
+  //   const surveyItem = SurveyItemMeta.create({survey: {id: id}});
+  //   surveyItem.load();
+  //   return surveyItem.survey;
+  // }, [id]);
 
   return (
     <>
