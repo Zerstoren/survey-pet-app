@@ -1,5 +1,5 @@
 import { flow, types } from "mobx-state-tree";
-import { loadSurvey } from "../../storageEmulate/surveyList";
+import { loadSurvey } from "../../storageEmulate/survey";
 import SurveyItem from "./surveyItem";
 
 const SurveyListStore = types.model({
@@ -14,7 +14,7 @@ const SurveyListStore = types.model({
   const loadList = flow(function*() {
     const result = yield loadSurvey(self.filterSearchText);
     self.surveys.replace(result);
-  })
+  });
 
   const applySearchText = (text: string) => {
     self.filterSearchText = text;

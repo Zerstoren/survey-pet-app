@@ -1,6 +1,6 @@
 import { applySnapshot, flow, getSnapshot, types } from "mobx-state-tree";
 import { v4 } from 'uuid';
-import { getSurvey, saveSurvey } from "../../storageEmulate/surveyList";
+import { getSurvey, saveSurvey } from "../../storageEmulate/survey";
 import SurveyQuestion from "./surveyQuestion";
 import { ISnapshotInSurveyItem } from "./types";
 
