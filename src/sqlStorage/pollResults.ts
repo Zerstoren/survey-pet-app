@@ -50,8 +50,8 @@ const addMany = async (data: Array<ISnapshotInPollResults>) => {
   return pollResultsRecirds.map(p => p.id);
 }
 
-const load = async () : Promise<Array<ISnapshotInPollResults>> => {
-  let results = await sqlite.query<PollResults>(new PollResults(), {} );
+const load = async (ids: Array<string>) : Promise<Array<ISnapshotInPollResults>> => {
+  let results = await sqlite.fromSql<PollResults>(new PollResults(), `SELECT * FROM poll_results WHERE answerId IN ("${ids.join('","')}")`, []);
   return results.map((r) => r.getJson());
 }
 

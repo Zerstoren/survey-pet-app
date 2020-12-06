@@ -1,7 +1,7 @@
 import { flow } from "mobx";
-import { getSnapshot, types } from "mobx-state-tree";
-import PollResults from "./pollResults";
+import { applySnapshot, getSnapshot, types } from "mobx-state-tree";
 import * as pollResultsSql from '../../sqlStorage/pollResults';
+import PollResults from "./pollResults";
 
 const PollResultsList = types.model("PollResultsList", {
   pollResults: types.array(PollResults),
@@ -10,8 +10,16 @@ const PollResultsList = types.model("PollResultsList", {
     yield pollResultsSql.addMany(getSnapshot(self).pollResults);
   });
 
+  const load = flow(function*(ids: Array<string>) {
+    applySnapshot(
+      self,
+      {pollResults: (yield pollResultsSql.load(ids))}
+    );
+  });
+
   return {
-    save
+    save,
+    load
   };
 });
 

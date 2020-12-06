@@ -62,6 +62,10 @@ const Content = ({item}: {item: ISurveyItem}) => {
     );
   }
 
+  if (!item.questions?.length) {
+    return (<></>);
+  }
+
   return (
     <div className="d-flex justify-content-center view-outside">
       <div className="view-block">

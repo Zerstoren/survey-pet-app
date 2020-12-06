@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import React, { useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import BreadCrumbs from '../../components/global/Header/BreadCrumbs';
 import HocHeader from '../../components/hoc/header';
 import SurveyItem from '../../stores/surveys/surveyItem';
@@ -17,7 +17,7 @@ const View = () => {
   
   const hocHeader = HocHeader(
     <BreadCrumbs items={[['', surveyItem.title]]} />,
-    <></>
+    <NavLink to={`/details/${id}`}><button type="button" className="btn btn-primary">Info</button></NavLink>
   );
   
   return (

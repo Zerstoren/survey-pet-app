@@ -1,0 +1,22 @@
+.content {
+  .chart-list {
+    .chart-item {
+      margin: 35px 15px;
+      width: 30%;
+
+      .chart-question-text {
+        margin-bottom: 15px;
+        width: 400px;
+        word-wrap: break-word;
+      }
+
+      .chart-block {
+        background-color: #fff;
+        padding: 20px 10px 10px 10px;
+        width: 400px;
+        box-shadow: 0 0 10px #aaa;
+        border-radius: 2px;
+      }
+    }
+  }
+}
